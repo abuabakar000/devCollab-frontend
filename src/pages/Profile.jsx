@@ -1,0 +1,242 @@
+import { useState, useEffect, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
+import api from "../services/api";
+import AuthContext from "../context/AuthContext";
+import { FaGithub, FaLink, FaUserEdit, FaUser, FaLinkedin, FaComment, FaHeart, FaTh, FaThList } from "react-icons/fa";
+import { BsGrid3X3 } from "react-icons/bs";
+
+const getOptimizedUrl = (url) => {
+    if (!url || !url.includes("cloudinary.com")) return url;
+    if (url.includes("f_auto,q_auto")) return url;
+    const parts = url.split("/upload/");
+    return `${parts[0]}/upload/f_auto,q_auto/${parts[1]}`;
+};
+
+const Profile = () => {
+    const { id } = useParams();
+    const { user: currentUser } = useContext(AuthContext);
+    const [profileUser, setProfileUser] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                setLoading(true);
+                setError("");
+                // Fetch user data
+                const userRes = await api.get(`/users/${id}`);
+                setProfileUser(userRes.data);
+
+                // Fetch user posts
+                const postsRes = await api.get(`/posts/user/${id}`);
+                setPosts(postsRes.data);
+
+            } catch (err) {
+                console.error("Failed to load profile", err);
+                setError("User not found or failed to load projects.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, [id]);
+
+    const handleFollow = async () => {
+        if (!currentUser) return;
+        try {
+            const { data } = await api.put(`/users/follow/${id}`);
+            setProfileUser(data);
+        } catch (err) {
+            console.error("Follow failed", err);
+        }
+    };
+
+    const isFollowing = profileUser?.followers?.includes(currentUser?._id);
+
+    if (loading) return <div className="text-white text-center mt-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent mx-auto mb-4"></div>
+        Loading profile...
+    </div>;
+
+    if (error || !profileUser) return (
+        <div className="text-center mt-20">
+            <div className="bg-canvas-subtle p-10 rounded-2xl border border-border-default max-w-md mx-auto">
+                <FaUser size={48} className="text-fg-muted mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-fg-default mb-2">{error || "User not found"}</h2>
+                <p className="text-fg-muted mb-6">The profile you are looking for does not exist or has been removed.</p>
+                <button onClick={() => window.history.back()} className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-xl transition">
+                    Go Back
+                </button>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="max-w-4xl mx-auto">
+            <div className="bg-canvas-subtle rounded-2xl p-8 mb-12 border border-border-default shadow-sm relative overflow-hidden">
+                {/* Subtle decorative accent */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent via-purple-500 to-pink-500 opacity-80 animate-gradient"></div>
+
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
+                    <div className="relative">
+                        {profileUser.profilePic ? (
+                            <img
+                                src={profileUser.profilePic}
+                                alt={profileUser.name}
+                                className="w-32 h-32 rounded-2xl object-cover border-2 border-border-default shadow-lg"
+                            />
+                        ) : (
+                            <div className="w-32 h-32 rounded-2xl bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted shadow-lg">
+                                <FaUser size={48} />
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex-1 text-center md:text-left">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <div>
+                                <h1 className="text-3xl font-bold text-fg-default mb-1">{profileUser.name}</h1>
+                                <p className="text-fg-muted font-medium italic mb-2">{profileUser.email}</p>
+
+                                <div className="flex justify-center md:justify-start gap-5 text-sm mb-1">
+                                    <div className="flex gap-1 items-baseline">
+                                        <span className="font-black text-fg-default">{posts.length}</span>
+                                        <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Posts</span>
+                                    </div>
+                                    <div className="flex gap-1 items-baseline">
+                                        <span className="font-black text-fg-default">{profileUser.followers?.length || 0}</span>
+                                        <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Followers</span>
+                                    </div>
+                                    <div className="flex gap-1 items-baseline">
+                                        <span className="font-black text-fg-default">{profileUser.following?.length || 0}</span>
+                                        <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Following</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-center md:justify-end gap-3">
+                                {currentUser && currentUser._id === id ? (
+                                    <Link to="/profile/edit" className="flex items-center justify-center gap-2 bg-canvas-default hover:bg-border-muted text-fg-default px-5 py-2 rounded-xl border border-border-default transition-all duration-200 text-sm font-semibold shadow-sm">
+                                        <FaUserEdit className="text-accent" /> Edit Profile
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={handleFollow}
+                                            className={`flex-1 md:flex-none px-6 py-2 rounded-xl transition-all duration-200 text-sm font-bold shadow-lg ${isFollowing
+                                                ? "bg-canvas-default text-fg-default border border-border-default hover:bg-border-muted"
+                                                : "bg-accent hover:bg-accent-hover text-white shadow-accent/20"
+                                                }`}
+                                        >
+                                            {isFollowing ? "Unfollow" : "Follow"}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                window.dispatchEvent(new CustomEvent('open-chat', { detail: profileUser }));
+                                            }}
+                                            className="p-2.5 bg-canvas-default hover:bg-border-muted text-accent rounded-xl border border-border-default transition-all duration-200 shadow-sm"
+                                            title="Message"
+                                        >
+                                            <FaComment size={18} />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <p className="text-fg-muted mb-6 leading-relaxed max-w-2xl">{profileUser.bio || "Crafting something amazing in the dev world..."}</p>
+
+                        {profileUser.techStack && profileUser.techStack.length > 0 && (
+                            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
+                                {profileUser.techStack.map((tech, i) => (
+                                    <span key={i} className="bg-canvas-default text-accent px-3 py-1 rounded-lg text-xs font-mono border border-border-muted shadow-sm">
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="flex justify-center md:justify-start gap-6 border-t border-border-muted pt-6 mt-2">
+                            {profileUser.linkedinLink && (
+                                <a href={profileUser.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                    <FaLinkedin size={18} className="text-fg-default" /> LinkedIn
+                                </a>
+                            )}
+                            {profileUser.githubLink && (
+                                <a href={profileUser.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                    <FaGithub size={18} className="text-fg-default" /> GitHub
+                                </a>
+                            )}
+                            {profileUser.portfolioLink && (
+                                <a href={profileUser.portfolioLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                    <FaLink size={16} className="text-fg-default" /> Portfolio
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Posts Grid Section */}
+            <div className="border-t border-border-muted pt-8">
+                <div className="flex items-center justify-center gap-8 mb-8">
+                    <div className="flex items-center gap-2 text-fg-default">
+                        <BsGrid3X3 size={20} />
+                        <span className="text-sm font-bold uppercase tracking-wider">Posts</span>
+                    </div>
+                </div>
+
+                {posts.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+                        {posts.map(post => {
+                            const images = post.images && post.images.length > 0 ? post.images : (post.image ? [post.image] : []);
+                            const thumbnail = images.length > 0 ? getOptimizedUrl(images[0]) : null;
+
+                            return (
+                                <Link
+                                    key={post._id}
+                                    to={`/posts/${post._id}`}
+                                    className="relative aspect-square bg-canvas-default border border-border-muted overflow-hidden group cursor-pointer hover:opacity-90 transition-opacity"
+                                >
+                                    {thumbnail ? (
+                                        <img
+                                            src={thumbnail}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-canvas-subtle">
+                                            <FaUser size={48} className="text-fg-muted opacity-20" />
+                                        </div>
+                                    )}
+
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
+                                        <div className="flex items-center gap-2 text-white font-bold">
+                                            <FaHeart size={20} />
+                                            <span>{post.likes.length}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-white font-bold">
+                                            <FaComment size={20} />
+                                            <span>{post.comments.length}</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="py-20 text-center bg-canvas-subtle rounded-2xl border border-dashed border-border-default">
+                        <BsGrid3X3 size={48} className="mx-auto mb-4 text-fg-muted opacity-20" />
+                        <p className="text-fg-muted font-medium">No posts yet</p>
+                        <p className="text-fg-muted text-sm mt-2">When {currentUser?._id === id ? 'you' : 'they'} post, they'll appear here</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default Profile;
