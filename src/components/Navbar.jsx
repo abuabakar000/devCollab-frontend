@@ -3,6 +3,8 @@ import { useContext, useState, useEffect, useRef } from "react";
 import AuthContext from "../context/AuthContext";
 import { FaBars, FaTimes, FaUser, FaHome, FaPlusCircle, FaSignOutAlt, FaUserEdit, FaBell, FaHeart, FaComment, FaUserPlus } from "react-icons/fa";
 import { io } from "socket.io-client";
+import { useSocket } from "../context/SocketContext";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import api from "../services/api";
 import logo from "../assets/logo.png";
 
@@ -18,33 +20,35 @@ const Navbar = () => {
     const [notifications, setNotifications] = useState([]);
     const dropdownRef = useRef(null);
     const notifRef = useRef(null);
-    const socket = useRef();
+    const socket = useSocket();
 
-    // Socket implementation for notifications
+    // Notification handling with shared socket
     useEffect(() => {
-        if (user) {
-            socket.current = io(import.meta.env.VITE_API_URL);
-            socket.current.emit("join", user._id);
+        if (!socket || !user) return;
 
-            socket.current.on("newNotification", (notif) => {
-                setNotifications(prev => [notif, ...prev]);
-            });
+        console.log("Navbar using shared socket:", socket.id);
 
-            const fetchNotifs = async () => {
-                try {
-                    const { data } = await api.get("/notifications");
-                    setNotifications(data);
-                } catch (err) {
-                    console.error(err);
-                }
-            };
-            fetchNotifs();
-        }
+        const handleNewNotif = (notif) => {
+            console.log("REAL-TIME NOTIFICATION RECEIVED:", notif);
+            setNotifications(prev => [notif, ...prev]);
+        };
+
+        socket.on("newNotification", handleNewNotif);
+
+        const fetchNotifs = async () => {
+            try {
+                const { data } = await api.get("/notifications");
+                setNotifications(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchNotifs();
 
         return () => {
-            if (socket.current) socket.current.disconnect();
+            socket.off("newNotification", handleNewNotif);
         };
-    }, [user]);
+    }, [socket, user]);
 
     // Close dropdowns on click outside
     useEffect(() => {
@@ -197,7 +201,6 @@ const Navbar = () => {
                                                 <span>Post</span>
                                             </Link>
 
-                                            {/* Messages/Inbox */}
                                             <button
                                                 onClick={() => {
                                                     const chatEvent = new CustomEvent('toggle-chat');
@@ -206,7 +209,7 @@ const Navbar = () => {
                                                 className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110"
                                                 title="Messages"
                                             >
-                                                <FaComment className="text-lg" />
+                                                <IoChatbubbleEllipsesSharp className="text-lg" />
                                                 <span>Inbox</span>
                                             </button>
 

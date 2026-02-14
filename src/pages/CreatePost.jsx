@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import Loader from "../components/Loader";
 
 const CreatePost = () => {
     const [title, setTitle] = useState("");
@@ -155,9 +156,9 @@ const CreatePost = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full"
+                            className={`btn-primary w-full ${loading ? 'py-2' : ''}`}
                         >
-                            {loading ? "Publishing Project..." : "Publish Project"}
+                            {loading ? <Loader size="sm" text="Broadcasting Project..." /> : "Publish Project"}
                         </button>
                     </div>
 

@@ -20,6 +20,12 @@
   body {
     @apply bg-canvas-default text-fg-default font-sans antialiased;
   }
+
+  /* Hide MS Edge/Chrome default password reveal button */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
 }
 
 @layer utilities {
@@ -129,7 +135,7 @@
 
 @layer components {
   .btn-primary {
-    @apply relative overflow-hidden bg-accent hover:bg-accent-hover text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-accent/20 hover:shadow-accent/40 active:scale-[0.98] flex items-center justify-center gap-3 select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+    @apply relative overflow-hidden bg-accent hover:bg-accent-hover text-white font-bold h-14 rounded-xl transition-all duration-300 shadow-lg shadow-accent/20 hover:shadow-accent/40 active:scale-[0.98] flex items-center justify-center gap-3 select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
   }
 
   .btn-primary::after {
@@ -142,7 +148,7 @@
   }
 
   .btn-secondary {
-    @apply relative overflow-hidden bg-transparent hover:bg-white/5 text-fg-muted hover:text-white font-bold py-3.5 rounded-xl transition-all duration-300 select-none active:scale-[0.98] flex items-center justify-center gap-2;
+    @apply relative overflow-hidden bg-transparent hover:bg-white/5 text-fg-muted hover:text-white font-bold h-14 rounded-xl transition-all duration-300 select-none active:scale-[0.98] flex items-center justify-center gap-2;
   }
 }
 

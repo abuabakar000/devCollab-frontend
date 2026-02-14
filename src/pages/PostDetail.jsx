@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { FaHeart, FaComment, FaGithub, FaUser, FaChevronLeft, FaChevronRight, FaPaperPlane, FaTimes, FaTrash } from "react-icons/fa";
+import { FaHeart, FaComment, FaGithub, FaUser, FaChevronLeft, FaChevronRight, FaPaperPlane, FaTimes, FaTrash, FaEllipsisV } from "react-icons/fa";
 import api from "../services/api";
+import Loader from "../components/Loader";
 import AuthContext from "../context/AuthContext";
 
 const getOptimizedUrl = (url) => {
@@ -24,6 +25,8 @@ const PostDetail = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [showPostOptions, setShowPostOptions] = useState(false);
+    const [showPostDeleteModal, setShowPostDeleteModal] = useState(false);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -93,11 +96,17 @@ const PostDetail = () => {
         }
     };
 
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
-        </div>
-    );
+    const handleDeletePost = async () => {
+        try {
+            await api.delete(`/posts/${id}`);
+            navigate("/"); // Or current category/feed
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            alert("Failed to delete post. Please try again.");
+        }
+    };
+
+    if (loading) return <Loader text="Unfolding the project details..." />;
 
     if (!post) return <div className="text-center py-20 text-fg-muted">Project not found.</div>;
 
@@ -190,7 +199,32 @@ const PostDetail = () => {
                     {/* Content Area (Scrollable) */}
                     <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-black scrollbar-track-transparent">
                         <div>
-                            <h1 className="text-2xl font-bold text-fg-default mb-3">{post.title}</h1>
+                            <div className="flex justify-between items-start mb-3">
+                                <h1 className="text-2xl font-bold text-fg-default">{post.title}</h1>
+                                {isOwnPost && (
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setShowPostOptions(!showPostOptions)}
+                                            className="text-fg-muted hover:text-fg-default p-2 rounded-full transition-colors"
+                                        >
+                                            <FaEllipsisV />
+                                        </button>
+                                        {showPostOptions && (
+                                            <div className="absolute right-0 mt-2 w-48 bg-canvas-subtle border border-border-default rounded-xl shadow-xl z-50 overflow-hidden">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowPostDeleteModal(true);
+                                                        setShowPostOptions(false);
+                                                    }}
+                                                    className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 flex items-center gap-2 transition"
+                                                >
+                                                    <FaTrash size={12} /> Delete Post
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                             <p className="text-fg-muted text-sm leading-relaxed whitespace-pre-line">{post.text}</p>
                         </div>
 
@@ -322,6 +356,31 @@ const PostDetail = () => {
                             </button>
                             <button
                                 onClick={confirmDeleteComment}
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-lg shadow-red-900/20 transition active:scale-95"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Post Delete Confirmation Modal */}
+            {showPostDeleteModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowPostDeleteModal(false)}></div>
+                    <div className="bg-canvas-subtle border border-border-default rounded-2xl p-6 max-w-sm w-full relative shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <h3 className="text-xl font-bold text-fg-default mb-2">Delete Post?</h3>
+                        <p className="text-fg-muted text-sm mb-6">This action is permanent and will remove all comments and likes. Are you sure?</p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowPostDeleteModal(false)}
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-canvas-default border border-border-default text-fg-default font-semibold text-sm hover:bg-border-muted transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDeletePost}
                                 className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-lg shadow-red-900/20 transition active:scale-95"
                             >
                                 Delete

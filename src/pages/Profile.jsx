@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
+import Loader from "../components/Loader";
 import AuthContext from "../context/AuthContext";
-import { FaGithub, FaLink, FaUserEdit, FaUser, FaLinkedin, FaComment, FaHeart, FaTh, FaThList } from "react-icons/fa";
+import { FaGithub, FaLink, FaUserEdit, FaUser, FaLinkedin, FaComment, FaHeart, FaTh, FaThList, FaTimes } from "react-icons/fa";
 import { BsGrid3X3 } from "react-icons/bs";
 
 const getOptimizedUrl = (url) => {
@@ -19,6 +20,12 @@ const Profile = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    // Modal states
+    const [showUserModal, setShowUserModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    const [userList, setUserList] = useState([]);
+    const [modalLoading, setModalLoading] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -56,10 +63,35 @@ const Profile = () => {
 
     const isFollowing = profileUser?.followers?.includes(currentUser?._id);
 
-    if (loading) return <div className="text-white text-center mt-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent mx-auto mb-4"></div>
-        Loading profile...
-    </div>;
+    const openFollowersModal = async () => {
+        setModalTitle("Followers");
+        setShowUserModal(true);
+        setModalLoading(true);
+        try {
+            const { data } = await api.get(`/users/${id}/followers`);
+            setUserList(data);
+        } catch (err) {
+            console.error("Failed to fetch followers", err);
+        } finally {
+            setModalLoading(false);
+        }
+    };
+
+    const openFollowingModal = async () => {
+        setModalTitle("Following");
+        setShowUserModal(true);
+        setModalLoading(true);
+        try {
+            const { data } = await api.get(`/users/${id}/following`);
+            setUserList(data);
+        } catch (err) {
+            console.error("Failed to fetch following", err);
+        } finally {
+            setModalLoading(false);
+        }
+    };
+
+    if (loading) return <Loader text="Assembling profile data..." />;
 
     if (error || !profileUser) return (
         <div className="text-center mt-20">
@@ -105,11 +137,17 @@ const Profile = () => {
                                         <span className="font-black text-fg-default">{posts.length}</span>
                                         <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Posts</span>
                                     </div>
-                                    <div className="flex gap-1 items-baseline">
+                                    <div
+                                        className="flex gap-1 items-baseline cursor-pointer hover:opacity-70 transition-opacity"
+                                        onClick={openFollowersModal}
+                                    >
                                         <span className="font-black text-fg-default">{profileUser.followers?.length || 0}</span>
                                         <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Followers</span>
                                     </div>
-                                    <div className="flex gap-1 items-baseline">
+                                    <div
+                                        className="flex gap-1 items-baseline cursor-pointer hover:opacity-70 transition-opacity"
+                                        onClick={openFollowingModal}
+                                    >
                                         <span className="font-black text-fg-default">{profileUser.following?.length || 0}</span>
                                         <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Following</span>
                                     </div>
@@ -234,6 +272,83 @@ const Profile = () => {
                         <p className="text-fg-muted text-sm mt-2">When {currentUser?._id === id ? 'you' : 'they'} post, they'll appear here</p>
                     </div>
                 )}
+            </div>
+
+            {/* MODAL MOUNT POINT */}
+            <UserListModal
+                isOpen={showUserModal}
+                onClose={() => setShowUserModal(false)}
+                title={modalTitle}
+                users={userList}
+                loading={modalLoading}
+            />
+        </div>
+    );
+};
+
+/* USER LIST MODAL COMPONENT */
+const UserListModal = ({ isOpen, onClose, title, users, loading }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300"
+                onClick={onClose}
+            ></div>
+
+            {/* Modal Content */}
+            <div className="relative w-full max-w-md bg-canvas-subtle border border-border-default rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+                <div className="p-6 border-b border-border-default flex items-center justify-between bg-canvas-default/50">
+                    <h3 className="text-xl font-black text-fg-default uppercase tracking-tight">{title}</h3>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-canvas-default rounded-full text-fg-muted hover:text-fg-default transition-colors"
+                    >
+                        <FaTimes />
+                    </button>
+                </div>
+
+                <div className="max-h-[60vh] overflow-y-auto p-2 scrollbar-thin">
+                    {loading ? (
+                        <div className="py-20 flex justify-center">
+                            <Loader size="sm" text="" />
+                        </div>
+                    ) : users.length > 0 ? (
+                        <div className="divide-y divide-border-muted/30">
+                            {users.map(user => (
+                                <Link
+                                    key={user._id}
+                                    to={`/profile/${user._id}`}
+                                    onClick={onClose}
+                                    className="flex items-center gap-4 p-4 hover:bg-canvas-default rounded-2xl transition-all duration-200 group"
+                                >
+                                    {user.profilePic ? (
+                                        <img
+                                            src={user.profilePic}
+                                            alt={user.name}
+                                            className="w-12 h-12 rounded-xl object-cover border border-border-muted group-hover:border-accent transition-colors"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-xl bg-canvas-subtle border border-border-muted flex items-center justify-center text-fg-muted group-hover:border-accent transition-colors">
+                                            <FaUser size={20} />
+                                        </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="font-bold text-fg-default truncate group-hover:text-accent transition-colors">{user.name}</h4>
+                                        <p className="text-xs text-fg-muted truncate">{user.bio || "No bio yet"}</p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-20 text-center">
+                            <FaUser size={40} className="mx-auto mb-4 text-fg-muted opacity-20" />
+                            <p className="text-fg-muted font-medium">No one found yet</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

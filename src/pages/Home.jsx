@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import PostCard from "../components/PostCard";
-import { FaSpinner, FaSearch, FaUser, FaTimes } from "react-icons/fa";
+import Loader from "../components/Loader";
+import { FaSearch, FaUser, FaTimes } from "react-icons/fa";
 
 const Home = () => {
     const [posts, setPosts] = useState([]);
@@ -67,11 +68,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center h-64">
-                <FaSpinner className="animate-spin text-4xl text-accent" />
-            </div>
-        );
+        return <Loader text="Loading amazing projects..." />;
     }
 
     if (error) {
@@ -110,8 +107,8 @@ const Home = () => {
                         {showResults && (searchResults.length > 0 || isSearching) && (
                             <div className="absolute top-full left-0 w-full mt-3 bg-canvas-subtle border border-border-default rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl bg-opacity-95">
                                 {isSearching ? (
-                                    <div className="p-8 flex justify-center">
-                                        <FaSpinner className="animate-spin text-accent text-2xl" />
+                                    <div className="p-8">
+                                        <Loader size="sm" text="Searching users..." />
                                     </div>
                                 ) : (
                                     <div className="max-h-[400px] overflow-y-auto scrollbar-thin">

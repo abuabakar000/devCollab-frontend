@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { io } from "socket.io-client";
+import { useSocket } from "../context/SocketContext";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
 import { FaComments, FaTimes, FaPaperPlane, FaUser, FaCircle, FaArrowLeft } from "react-icons/fa";
-import { IoSend } from "react-icons/io5";
+import { IoSend, IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 const ChatBox = () => {
     const { user } = useContext(AuthContext);
@@ -13,30 +14,91 @@ const ChatBox = () => {
     const [inputText, setInputText] = useState("");
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [conversations, setConversations] = useState([]);
-    const socket = useRef();
+    const socket = useSocket();
     const scrollRef = useRef();
+    const activeChatRef = useRef(activeChat);
+    const isOpenRef = useRef(isOpen);
 
-    // Initialize Socket
+    // Sync refs with state
     useEffect(() => {
-        if (user) {
-            socket.current = io(import.meta.env.VITE_API_URL); // Adjust for production
-            socket.current.emit("join", user._id);
+        activeChatRef.current = activeChat;
+    }, [activeChat]);
 
-            socket.current.on("getOnlineUsers", (users) => {
-                setOnlineUsers(users);
-            });
+    useEffect(() => {
+        isOpenRef.current = isOpen;
+    }, [isOpen]);
 
-            socket.current.on("getMessage", (data) => {
-                if (activeChat?._id === data.senderId) {
-                    setMessages((prev) => [...prev, { sender: data.senderId, text: data.text }]);
-                }
-            });
+    // Fetch Conversations users have had
+    const fetchConversations = async () => {
+        try {
+            console.log("Fetching conversations...");
+            const { data } = await api.get("/messages/conversations");
+            const users = await Promise.all(data.map(async (id) => {
+                const res = await api.get(`/users/${id}`);
+                return res.data;
+            }));
+            setConversations(users);
+        } catch (err) {
+            console.error("Fetch conversations failed:", err);
         }
+    };
+
+    // Socket listeners for messages
+    useEffect(() => {
+        if (!socket) return;
+
+        console.log("ChatBox: Registering socket listeners");
+
+        const handleGetOnlineUsers = (users) => {
+            setOnlineUsers(users);
+        };
+
+        const handleGetMessage = (data) => {
+            console.log("REAL-TIME MESSAGE RECEIVED:", data);
+
+            // Auto-open chat if it's not open
+            if (!isOpenRef.current) {
+                console.log("Auto-opening chat...");
+                setIsOpen(true);
+                isOpenRef.current = true;
+            }
+
+            const senderData = {
+                _id: data.senderId,
+                name: data.senderName,
+                profilePic: data.senderPic
+            };
+
+            // Switch to the sender if not already active
+            if (!activeChatRef.current || activeChatRef.current._id !== data.senderId) {
+                console.log("Switching active chat to:", data.senderName);
+                activeChatRef.current = senderData;
+                setActiveChat(senderData);
+            }
+
+            // If the chat is open with this user, update messages
+            if (activeChatRef.current?._id === data.senderId) {
+                setMessages((prev) => [...prev, { sender: data.senderId, text: data.text }]);
+            }
+
+            // Always trigger a refresh of conversations to update previews/list
+            fetchConversations();
+        };
+
+        socket.on("getOnlineUsers", handleGetOnlineUsers);
+        socket.on("getMessage", handleGetMessage);
 
         return () => {
-            if (socket.current) socket.current.disconnect();
+            console.log("ChatBox: Cleaning up socket listeners");
+            socket.off("getOnlineUsers", handleGetOnlineUsers);
+            socket.off("getMessage", handleGetMessage);
         };
-    }, [user, activeChat]);
+    }, [socket]); // Only depend on socket
+
+    // Initial fetch of conversations when opened
+    useEffect(() => {
+        if (user && isOpen) fetchConversations();
+    }, [user, isOpen]);
 
     // Listen for external open-chat events (from Profile page)
     useEffect(() => {
@@ -57,23 +119,6 @@ const ChatBox = () => {
         return () => window.removeEventListener('toggle-chat', handleToggleChat);
     }, []);
 
-    // Fetch Conversations users have had
-    useEffect(() => {
-        const fetchConversations = async () => {
-            try {
-                const { data } = await api.get("/messages/conversations");
-                const users = await Promise.all(data.map(async (id) => {
-                    const res = await api.get(`/users/${id}`);
-                    return res.data;
-                }));
-                setConversations(users);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        if (user && isOpen) fetchConversations();
-    }, [user, isOpen]);
-
     // Fetch Messages for active chat
     useEffect(() => {
         const fetchMessages = async () => {
@@ -81,7 +126,7 @@ const ChatBox = () => {
                 const { data } = await api.get(`/messages/${activeChat._id}`);
                 setMessages(data);
             } catch (err) {
-                console.error(err);
+                console.error("Fetch messages failed:", err);
             }
         };
         if (activeChat) fetchMessages();
@@ -103,19 +148,29 @@ const ChatBox = () => {
 
         try {
             const { data } = await api.post("/messages", messageData);
-            socket.current.emit("sendMessage", {
+            socket.emit("sendMessage", {
                 senderId: user._id,
+                senderName: user.name,
+                senderPic: user.profilePic,
                 receiverId: activeChat._id,
                 text: inputText,
             });
             setMessages((prev) => [...prev, data]);
             setInputText("");
+            // Refresh conversations list to update preview of the chat we just sent to
+            fetchConversations();
         } catch (err) {
             console.error(err);
         }
     };
 
     if (!user) return null;
+
+    const getOptimizedUrl = (url) => {
+        if (!url || !url.includes("cloudinary.com")) return url;
+        const parts = url.split("/upload/");
+        return `${parts[0]}/upload/f_auto,q_auto/${parts[1]}`;
+    };
 
     return (
         <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] flex flex-col items-end">
@@ -133,7 +188,7 @@ const ChatBox = () => {
                                     </button>
                                     <div className="relative">
                                         {activeChat.profilePic ? (
-                                            <img src={activeChat.profilePic} alt={activeChat.name} className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover" />
+                                            <img src={getOptimizedUrl(activeChat.profilePic)} alt={activeChat.name} className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover" />
                                         ) : (
                                             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-border-muted flex items-center justify-center text-fg-muted">
                                                 <FaUser size={12} />
@@ -149,7 +204,7 @@ const ChatBox = () => {
                                 </>
                             ) : (
                                 <>
-                                    <FaComments className="text-accent text-sm md:text-base" />
+                                    <IoChatbubbleEllipsesSharp className="text-accent text-sm md:text-base mr-2" />
                                     <h4 className="text-xs md:text-sm font-bold text-fg-default">Messages</h4>
                                 </>
                             )}
@@ -176,7 +231,7 @@ const ChatBox = () => {
                                         >
                                             <div className="relative shrink-0">
                                                 {c.profilePic ? (
-                                                    <img src={c.profilePic} alt={c.name} className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
+                                                    <img src={getOptimizedUrl(c.profilePic)} alt={c.name} className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
                                                 ) : (
                                                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-border-muted flex items-center justify-center text-fg-muted">
                                                         <FaUser size={14} />
@@ -235,11 +290,10 @@ const ChatBox = () => {
                     className="btn-primary w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full p-0 shadow-2xl hover:scale-110 active:scale-90"
                 >
                     <div className="relative">
-                        <FaComments className="text-xl md:text-2xl" />
+                        <IoChatbubbleEllipsesSharp className="text-xl md:text-2xl" />
                         <div className="absolute -top-0.5 -right-0.5 w-2.5 md:w-3 h-2.5 md:h-3 bg-green-400 border-2 border-accent rounded-full animate-pulse"></div>
                     </div>
                 </button>
-
             )}
         </div>
     );

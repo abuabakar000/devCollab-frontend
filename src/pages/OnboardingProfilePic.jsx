@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
+import Loader from "../components/Loader";
 import { FaUser, FaCamera, FaCheck, FaArrowRight, FaTimes } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 import getCroppedImg, { blobURLtoFile } from "../utils/getCroppedImg";
@@ -74,8 +75,8 @@ const OnboardingProfilePic = () => {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            // Refresh user context or just navigate
-            navigate("/onboarding/welcome");
+            // Force reload to update all UI elements with the new profile pic
+            window.location.href = "/onboarding/welcome";
 
         } catch (err) {
             setError(err.response?.data?.message || "Failed to upload profile picture");
@@ -85,7 +86,7 @@ const OnboardingProfilePic = () => {
     };
 
     const handleSkip = () => {
-        navigate("/onboarding/welcome");
+        window.location.href = "/onboarding/welcome";
     };
 
 
@@ -140,8 +141,14 @@ const OnboardingProfilePic = () => {
                                 disabled={loading}
                                 className="btn-primary w-full"
                             >
-                                <span>{loading ? "Uploading..." : preview ? "Save and Finish" : "Finish Setup"}</span>
-                                {!loading && <FaArrowRight className="group-hover:translate-x-1 transition-transform" />}
+                                {loading ? (
+                                    <Loader size="sm" text="Uploading..." button />
+                                ) : (
+                                    <>
+                                        <span>{preview ? "Save and Finish" : "Finish Setup"}</span>
+                                        <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+                                    </>
+                                )}
                             </button>
 
                             <button

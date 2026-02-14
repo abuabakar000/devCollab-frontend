@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
+import Loader from "../components/Loader";
 import { FaGithub, FaLinkedin, FaGlobe, FaRocket, FaArrowRight } from "react-icons/fa";
 
 const Onboarding = () => {
@@ -18,7 +19,7 @@ const Onboarding = () => {
         setLoading(true);
         setError("");
         try {
-            await api.put("/users/profile", {
+            await api.put("/users/update", {
                 portfolioLink,
                 githubLink,
                 linkedinLink,
@@ -126,8 +127,14 @@ const Onboarding = () => {
                                 disabled={loading}
                                 className="btn-primary w-full"
                             >
-                                <span>{loading ? "Optimizing Profile..." : "Complete Setup"}</span>
-                                {!loading && <FaArrowRight className="group-hover:translate-x-1 transition-transform" />}
+                                {loading ? (
+                                    <Loader size="sm" text="Optimizing Profile..." button />
+                                ) : (
+                                    <>
+                                        <span>Complete Profile</span>
+                                        <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+                                    </>
+                                )}
                             </button>
                             <button
                                 type="button"

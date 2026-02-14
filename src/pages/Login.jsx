@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import Loader from "../components/Loader";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../assets/logo-onboard.png";
 
@@ -12,13 +13,19 @@ const Login = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
 
+    const [submitting, setSubmitting] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
+        setError("");
         try {
             await login(email, password);
             navigate("/");
         } catch (err) {
-            setError("Invalid credentials. Please try again.");
+            setError("Invalid credentials or server unreachable.");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -112,9 +119,10 @@ const Login = () => {
                         <div className="pt-4">
                             <button
                                 type="submit"
-                                className="btn-primary w-full py-5 text-xl shadow-[0_0_30px_rgba(47,129,247,0.2)]"
+                                disabled={submitting}
+                                className="btn-primary w-full text-xl shadow-[0_0_30px_rgba(47,129,247,0.2)]"
                             >
-                                Sign In
+                                {submitting ? <Loader size="sm" text="Authenticating..." button /> : "Sign In"}
                             </button>
                         </div>
                     </form>

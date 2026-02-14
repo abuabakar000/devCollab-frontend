@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
+import Loader from "../components/Loader";
 import { FaUser, FaCamera, FaSave, FaTimes, FaGithub, FaLink, FaTools, FaLinkedin, FaCheck } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 import getCroppedImg, { blobURLtoFile } from "../utils/getCroppedImg";
@@ -139,6 +140,7 @@ const EditProfile = () => {
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
                                 required
+                                placeholder="Username"
                             />
                         </div>
 
@@ -180,7 +182,7 @@ const EditProfile = () => {
                                 value={githubLink}
                                 onChange={(e) => setGithubLink(e.target.value)}
                                 className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
-                            />
+                                placeholder="https://github.com/ak/..." />
                         </div>
 
                         {/* Portfolio */}
@@ -193,6 +195,7 @@ const EditProfile = () => {
                                 value={portfolioLink}
                                 onChange={(e) => setPortfolioLink(e.target.value)}
                                 className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                placeholder="https://portfolio.com/..."
                             />
                         </div>
                     </div>
@@ -224,7 +227,7 @@ const EditProfile = () => {
                             className="btn-primary flex-1"
                         >
                             {loading ? (
-                                <div className="w-6 h-6 border-b-2 border-white rounded-full animate-spin"></div>
+                                <Loader size="sm" text="Updating..." button />
                             ) : (
                                 <><FaSave /> Save Changes</>
                             )}
