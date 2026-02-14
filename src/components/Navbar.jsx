@@ -16,6 +16,7 @@ const Navbar = () => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const isOnboarding = location.pathname.startsWith("/onboarding");
     const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+    const dropdownRef = useRef(null);
     const notifRef = useRef(null);
     const { socket, notifications, setNotifications, unreadCount, setUnreadCount } = useSocket();
 
