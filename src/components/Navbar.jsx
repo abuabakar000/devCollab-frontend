@@ -2,7 +2,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import AuthContext from "../context/AuthContext";
 import { FaBars, FaTimes, FaUser, FaHome, FaPlusCircle, FaSignOutAlt, FaUserEdit, FaBell, FaHeart, FaComment, FaUserPlus } from "react-icons/fa";
-import { io } from "socket.io-client";
 import { useSocket } from "../context/SocketContext";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import api from "../services/api";
@@ -17,38 +16,24 @@ const Navbar = () => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const isOnboarding = location.pathname.startsWith("/onboarding");
     const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
-    const [notifications, setNotifications] = useState([]);
-    const dropdownRef = useRef(null);
     const notifRef = useRef(null);
-    const socket = useSocket();
+    const { socket, notifications, setNotifications, unreadCount, setUnreadCount } = useSocket();
 
     // Notification handling with shared socket
     useEffect(() => {
-        if (!socket || !user) return;
-
-        console.log("Navbar using shared socket:", socket.id);
-
-        const handleNewNotif = (notif) => {
-            console.log("REAL-TIME NOTIFICATION RECEIVED:", notif);
-            setNotifications(prev => [notif, ...prev]);
-        };
-
-        socket.on("newNotification", handleNewNotif);
-
         const fetchNotifs = async () => {
             try {
                 const { data } = await api.get("/notifications");
                 setNotifications(data);
+                // Set initial unread count
+                const unread = data.filter(n => !n.read).length;
+                setUnreadCount(unread);
             } catch (err) {
                 console.error(err);
             }
         };
-        fetchNotifs();
-
-        return () => {
-            socket.off("newNotification", handleNewNotif);
-        };
-    }, [socket, user]);
+        if (user) fetchNotifs();
+    }, [user, setNotifications, setUnreadCount]);
 
     // Close dropdowns on click outside
     useEffect(() => {
@@ -81,14 +66,13 @@ const Navbar = () => {
             try {
                 await api.put("/notifications/read");
                 setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                setUnreadCount(0);
             } catch (err) {
                 console.error(err);
             }
         }
         setIsNotifOpen(!isNotifOpen);
     };
-
-    const unreadCount = notifications.filter(n => !n.read).length;
 
     const getOptimizedUrl = (url) => {
         if (!url || !url.includes("cloudinary.com")) return url;

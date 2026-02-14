@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { io } from "socket.io-client";
 import { useSocket } from "../context/SocketContext";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
@@ -12,9 +11,8 @@ const ChatBox = () => {
     const [activeChat, setActiveChat] = useState(null); // The user you're chatting with
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState("");
-    const [onlineUsers, setOnlineUsers] = useState([]);
     const [conversations, setConversations] = useState([]);
-    const socket = useSocket();
+    const { socket, onlineUsers } = useSocket();
     const scrollRef = useRef();
     const activeChatRef = useRef(activeChat);
     const isOpenRef = useRef(isOpen);
@@ -50,7 +48,8 @@ const ChatBox = () => {
         console.log("ChatBox: Registering socket listeners");
 
         const handleGetOnlineUsers = (users) => {
-            setOnlineUsers(users);
+            // Already handled in SocketContext if we want, but keeping for ChatBox specific logic
+            // Actually SocketContext provides onlineUsers, we can just use that
         };
 
         const handleGetMessage = (data) => {

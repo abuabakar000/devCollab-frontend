@@ -1,40 +1,64 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 import AuthContext from "./AuthContext";
 
 const SocketContext = createContext();
 
-export const useSocket = () => {
-    return useContext(SocketContext);
-};
+export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
-    const [socket, setSocket] = useState(null);
     const { user } = useContext(AuthContext);
+    const [socket, setSocket] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         if (user) {
-            const newSocket = io(import.meta.env.VITE_API_URL, {
-                withCredentials: true,
+            const socketInstance = io(import.meta.env.VITE_API_URL, {
+                query: { userId: user._id },
             });
 
-            newSocket.on("connect", () => {
-                console.log("Socket connected:", newSocket.id);
-                newSocket.emit("join", user._id);
+            setSocket(socketInstance);
+
+            socketInstance.emit("join", user._id);
+
+            socketInstance.on("getOnlineUsers", (users) => {
+                setOnlineUsers(users);
             });
 
-            setSocket(newSocket);
+            socketInstance.on("newNotification", (notification) => {
+                setNotifications((prev) => [notification, ...prev]);
+                setUnreadCount((prev) => prev + 1);
+
+                // Optional: Play sound or show toast
+                console.log("New Notification received:", notification);
+            });
 
             return () => {
-                newSocket.close();
+                socketInstance.disconnect();
                 setSocket(null);
             };
+        } else {
+            if (socket) {
+                socket.disconnect();
+                setSocket(null);
+            }
         }
     }, [user]);
 
     return (
-        <SocketContext.Provider value={socket}>
+        <SocketContext.Provider value={{
+            socket,
+            onlineUsers,
+            notifications,
+            setNotifications,
+            unreadCount,
+            setUnreadCount
+        }}>
             {children}
         </SocketContext.Provider>
     );
 };
+
+export default SocketContext;
