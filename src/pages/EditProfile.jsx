@@ -239,16 +239,16 @@ const EditProfile = () => {
 
             {/* Cropper Modal */}
             {showCropper && (
-                <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center p-4">
-                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-hidden shadow-2xl border border-border-default">
-                        <div className="p-6 border-b border-border-default flex justify-between items-center">
+                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-4">
+                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-y-auto max-h-[calc(100vh-40px)] scrollbar-thin shadow-2xl border border-border-default">
+                        <div className="p-5 md:p-6 border-b border-border-default flex justify-between items-center sticky top-0 bg-canvas-subtle z-10">
                             <h3 className="text-xl font-black text-fg-default">Adjust Profile Picture</h3>
                             <button onClick={() => setShowCropper(false)} className="p-2 hover:bg-canvas-default rounded-full text-fg-muted transition">
                                 <FaTimes />
                             </button>
                         </div>
 
-                        <div className="relative h-[400px] w-full bg-black">
+                        <div className="relative h-[300px] md:h-[400px] w-full bg-black">
                             <Cropper
                                 image={image}
                                 crop={crop}
@@ -262,7 +262,7 @@ const EditProfile = () => {
                             />
                         </div>
 
-                        <div className="p-8 space-y-6">
+                        <div className="p-6 md:p-8 space-y-6">
                             <div className="space-y-4">
                                 <div className="flex justify-between text-xs font-black text-fg-muted uppercase tracking-widest">
                                     <span>Zoom</span>
@@ -274,7 +274,6 @@ const EditProfile = () => {
                                     min={1}
                                     max={3}
                                     step={0.1}
-                                    aria-labelledby="Zoom"
                                     onChange={(e) => setZoom(e.target.value)}
                                     className="w-full h-2 bg-canvas-default rounded-lg appearance-none cursor-pointer accent-accent"
                                 />
@@ -283,21 +282,20 @@ const EditProfile = () => {
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowCropper(false)}
-                                    className="btn-secondary flex-1 border border-border-default"
+                                    className="btn-secondary flex-1 border border-border-default h-12 md:h-14"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleCropSave}
-                                    className="btn-primary flex-1"
+                                    className="btn-primary flex-1 h-12 md:h-14"
                                 >
                                     <FaCheck /> Apply Frame
                                 </button>
                             </div>
-
                         </div>
                     </div>
-                    <p className="mt-6 text-fg-muted text-sm font-medium">Drag to reposition your photo</p>
+                    <p className="mt-4 text-fg-muted text-sm font-medium hidden md:block">Drag to reposition your photo</p>
                 </div>
             )}
         </div>

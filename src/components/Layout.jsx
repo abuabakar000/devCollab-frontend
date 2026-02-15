@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
 
 
     return (
-        <div className="min-h-screen bg-canvas-default text-fg-default font-sans overflow-x-hidden">
+        <div className="min-h-screen bg-canvas-default text-fg-default font-sans">
             {!isPostDetail && <Navbar />}
             <main className={`${(!isPostDetail && !isAuthPage) ? "container mx-auto px-4 py-8" : ""}`}>
                 {children}

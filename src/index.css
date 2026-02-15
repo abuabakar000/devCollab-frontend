@@ -16,6 +16,10 @@
   --color-fg-muted: #8B949E;
 }
 
+:root {
+  --accent-rgb: 47, 129, 247;
+}
+
 @layer base {
   body {
     @apply bg-canvas-default text-fg-default font-sans antialiased;

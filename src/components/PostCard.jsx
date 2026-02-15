@@ -28,65 +28,65 @@ const PostCard = ({ post }) => {
     };
 
     return (
-        <div className="bg-canvas-subtle rounded-xl shadow-sm mb-6 overflow-hidden border border-border-default hover:border-border-muted transition duration-200">
-            <Link to={`/posts/${post._id}`}>
+        <div className="bg-canvas-subtle rounded-3xl shadow-lg mb-4 md:mb-8 overflow-hidden border border-border-default hover:border-accent/30 transition-all duration-300 group">
+            <Link to={`/posts/${post._id}`} className="block overflow-hidden">
                 {(post.images && post.images.length > 0) ? (
                     <img
                         src={getOptimizedUrl(post.images[0])}
                         alt={post.title}
-                        className="w-full h-64 object-cover border-b border-border-muted"
+                        className="w-full aspect-[16/10] md:h-72 object-cover border-b border-border-muted group-hover:scale-105 transition-transform duration-700"
                     />
                 ) : post.image ? (
                     <img
                         src={getOptimizedUrl(post.image)}
                         alt={post.title}
-                        className="w-full h-64 object-cover border-b border-border-muted"
+                        className="w-full aspect-[16/10] md:h-72 object-cover border-b border-border-muted group-hover:scale-105 transition-transform duration-700"
                     />
                 ) : null}
             </Link>
-            <div className="p-6">
-                <div className="flex items-center mb-4">
-                    <Link to={`/profile/${post.user._id}`} className="flex items-center group">
+            <div className="p-4 md:p-8">
+                <div className="flex items-center mb-4 md:mb-6">
+                    <Link to={`/profile/${post.user._id}`} className="flex items-center group/user">
                         {post.user.profilePic ? (
-                            <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-10 h-10 rounded-full mr-3 object-cover border border-border-default" />
+                            <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-8 h-8 md:w-12 md:h-12 rounded-xl mr-3 object-cover border border-border-default group-hover/user:border-accent transition-colors" />
                         ) : (
-                            <div className="w-10 h-10 rounded-full bg-canvas-default border border-border-muted flex items-center justify-center mr-3">
-                                <FaUser className="text-fg-muted" />
+                            <div className="w-8 h-8 md:w-12 md:h-12 rounded-xl bg-canvas-default border border-border-muted flex items-center justify-center mr-3 group-hover/user:border-accent transition-colors">
+                                <FaUser className="text-fg-muted size-3 md:size-5" />
                             </div>
                         )}
                         <div>
-                            <h3 className="font-semibold text-fg-default group-hover:text-accent transition">{post.user.name}</h3>
-                            <p className="text-fg-muted text-xs">{new Date(post.createdAt).toLocaleDateString()}</p>
+                            <h3 className="font-bold text-sm md:text-lg text-fg-default group-hover/user:text-accent transition">{post.user.name}</h3>
+                            <p className="text-fg-muted text-[10px] md:text-xs uppercase tracking-widest font-black opacity-60">{new Date(post.createdAt).toLocaleDateString()}</p>
                         </div>
                     </Link>
                 </div>
 
-                <Link to={`/posts/${post._id}`} className="group">
-                    <h2 className="text-xl font-bold text-fg-default mb-2 group-hover:text-accent transition">{post.title}</h2>
-                    <p className="text-fg-muted mb-4 whitespace-pre-line text-sm leading-relaxed line-clamp-3">{post.text}</p>
+                <Link to={`/posts/${post._id}`} className="block mb-4">
+                    <h2 className="text-lg md:text-2xl font-black text-fg-default mb-2 group-hover:text-accent transition uppercase tracking-tight">{post.title}</h2>
+                    <p className="text-fg-muted whitespace-pre-line text-xs md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 opacity-90">{post.text}</p>
                 </Link>
 
                 {post.techStack && post.techStack.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2 mb-6">
                         {post.techStack.map((tech, index) => (
-                            <span key={index} className="bg-canvas-default text-accent text-xs px-2 py-1 rounded-full border border-border-muted font-mono">
+                            <span key={index} className="bg-canvas-default text-accent text-[10px] md:text-xs px-2.5 py-1 rounded-lg border border-border-muted font-mono font-bold shadow-sm">
                                 {tech}
                             </span>
                         ))}
                     </div>
                 )}
 
-                <div className="flex items-center justify-between border-t border-border-muted pt-4 mt-2">
-                    <div className="flex space-x-4">
+                <div className="flex items-center justify-between border-t border-border-muted pt-4 md:pt-6 mt-2">
+                    <div className="flex space-x-6">
                         <button
                             onClick={handleLike}
-                            className={`flex items-center space-x-1 ${isLiked ? "text-red-500" : "text-fg-muted hover:text-red-500"} transition text-sm`}
+                            className={`flex items-center space-x-2 ${isLiked ? "text-red-500" : "text-fg-muted hover:text-red-500"} transition text-xs md:text-sm font-bold uppercase tracking-wider`}
                         >
-                            <FaHeart />
+                            <FaHeart size={16} className={isLiked ? "animate-jump" : ""} />
                             <span>{likes}</span>
                         </button>
-                        <Link to={`/posts/${post._id}`} className="flex items-center space-x-1 text-fg-muted hover:text-accent transition text-sm">
-                            <FaComment />
+                        <Link to={`/posts/${post._id}`} className="flex items-center space-x-2 text-fg-muted hover:text-accent transition text-xs md:text-sm font-bold uppercase tracking-wider">
+                            <FaComment size={16} />
                             <span>{post.comments.length}</span>
                         </Link>
                     </div>
@@ -96,10 +96,10 @@ const PostCard = ({ post }) => {
                             href={post.githubRepoLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center space-x-1 text-fg-muted hover:text-fg-default transition text-sm"
+                            className="flex items-center space-x-2 text-fg-muted hover:text-fg-default transition text-xs md:text-sm font-black uppercase tracking-widest bg-canvas-default px-3 py-1.5 rounded-lg border border-border-muted shadow-sm"
                         >
                             <FaGithub size={16} />
-                            <span>View Code</span>
+                            <span className="hidden xs:inline">Source</span>
                         </a>
                     )}
                 </div>

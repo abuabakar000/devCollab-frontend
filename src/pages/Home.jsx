@@ -76,11 +76,11 @@ const Home = () => {
     }
 
     return (
-        <div className="w-full max-w-[1500px] lg:px-12 py-8">
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+        <div className="w-full max-w-[1500px] mx-auto lg:px-12 py-8">
+            <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
 
                 {/* Left Sidebar - Search & Info */}
-                <div className="w-full lg:w-[320px] lg:sticky lg:top-[100px] h-fit self-start order-1 lg:order-1">
+                <div className="w-full md:w-[320px] md:sticky md:top-24 h-fit self-start order-1">
                     <div className="relative mb-8" ref={searchRef}>
                         <h2 className="text-xs font-black text-fg-muted uppercase tracking-[0.2em] mb-4 ml-1">Find Developers</h2>
                         <div className="relative group">
@@ -149,10 +149,18 @@ const Home = () => {
                 </div>
 
                 {/* Main Feed */}
-                <div className="flex-1 max-w-[700px] order-2 lg:order-2">
-                    <div className="flex items-center justify-between mb-8 border-b border-border-default pb-4">
-                        <h1 className="text-2xl font-black text-fg-default tracking-tight uppercase">Latest Posts</h1>
-                        <div className="text-xs font-bold text-fg-muted uppercase tracking-widest">{posts.length} Posts</div>
+                <div className="flex-1 max-w-[700px] order-2 lg:order-2 px-4 md:px-0">
+                    <div className="flex flex-col mb-6 md:mb-10 border-b border-border-default pb-4 md:pb-6">
+                        <div className="flex items-center justify-between mb-2">
+                            <h1 className="text-xl md:text-3xl font-black text-fg-default tracking-tight uppercase">Latest Posts</h1>
+                            <div className="text-[10px] md:text-xs font-bold text-fg-muted uppercase tracking-widest">{posts.length} Posts</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.8)]"></div>
+                            <span className="text-[10px] md:text-xs font-black text-accent uppercase tracking-[0.3em] drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)] animate-pulse">
+                                Community Pulse
+                            </span>
+                        </div>
                     </div>
 
                     {posts.length === 0 ? (
@@ -160,7 +168,7 @@ const Home = () => {
                             <p className="text-fg-muted font-medium">No Posts shared yet. Be the first!</p>
                         </div>
                     ) : (
-                        <div className="space-y-6">
+                        <div className="space-y-4 md:space-y-10">
                             {posts.map((post) => (
                                 <PostCard key={post._id} post={post} />
                             ))}

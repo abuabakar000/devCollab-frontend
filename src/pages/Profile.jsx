@@ -112,27 +112,50 @@ const Profile = () => {
                 {/* Subtle decorative accent */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent via-purple-500 to-pink-500 opacity-80 animate-gradient"></div>
 
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
-                    <div className="relative">
-                        {profileUser.profilePic ? (
-                            <img
-                                src={profileUser.profilePic}
-                                alt={profileUser.name}
-                                className="w-32 h-32 rounded-2xl object-cover border-2 border-border-default shadow-lg"
-                            />
-                        ) : (
-                            <div className="w-32 h-32 rounded-2xl bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted shadow-lg">
-                                <FaUser size={48} />
+                <div className="flex flex-col md:flex-row gap-6 md:gap-10">
+                    {/* Top Row: PFP and Stats (Mobile Row, Desktop Column-like) */}
+                    <div className="flex items-center md:items-start gap-6 md:gap-10">
+                        <div className="relative shrink-0">
+                            {profileUser.profilePic ? (
+                                <img
+                                    src={profileUser.profilePic}
+                                    alt={profileUser.name}
+                                    className="w-20 h-20 md:w-32 md:h-32 rounded-2xl object-cover border-2 border-border-default shadow-lg"
+                                />
+                            ) : (
+                                <div className="w-20 h-20 md:w-32 md:h-32 rounded-2xl bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted shadow-lg">
+                                    <FaUser className="size-8 md:size-12" />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Stats Row for Mobile (beside PFP) */}
+                        <div className="flex-1 md:hidden">
+                            <div className="flex justify-between items-center text-center">
+                                <div className="flex flex-col">
+                                    <span className="font-black text-lg text-fg-default">{posts.length}</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Posts</span>
+                                </div>
+                                <div className="flex flex-col cursor-pointer" onClick={openFollowersModal}>
+                                    <span className="font-black text-lg text-fg-default">{profileUser.followers?.length || 0}</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Followers</span>
+                                </div>
+                                <div className="flex flex-col cursor-pointer" onClick={openFollowingModal}>
+                                    <span className="font-black text-lg text-fg-default">{profileUser.following?.length || 0}</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Following</span>
+                                </div>
                             </div>
-                        )}
+                        </div>
                     </div>
-                    <div className="flex-1 text-center md:text-left">
+
+                    <div className="flex-1 text-left">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                             <div>
-                                <h1 className="text-3xl font-bold text-fg-default mb-1">{profileUser.name}</h1>
-                                <p className="text-fg-muted font-medium italic mb-2">{profileUser.email}</p>
+                                <h1 className="text-2xl md:text-3xl font-bold text-fg-default mb-0.5">{profileUser.name}</h1>
+                                <p className="text-fg-muted font-medium text-xs md:text-sm italic mb-4">{profileUser.email}</p>
 
-                                <div className="flex justify-center md:justify-start gap-5 text-sm mb-1">
+                                {/* Stats for Desktop (under name) */}
+                                <div className="hidden md:flex gap-8 text-sm mb-1">
                                     <div className="flex gap-1 items-baseline">
                                         <span className="font-black text-fg-default">{posts.length}</span>
                                         <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Posts</span>
@@ -154,16 +177,16 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-center md:justify-end gap-3">
+                            <div className="flex items-center gap-2 w-full md:w-auto">
                                 {currentUser && currentUser._id === id ? (
-                                    <Link to="/profile/edit" className="flex items-center justify-center gap-2 bg-canvas-default hover:bg-border-muted text-fg-default px-5 py-2 rounded-xl border border-border-default transition-all duration-200 text-sm font-semibold shadow-sm">
+                                    <Link to="/profile/edit" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-canvas-default hover:bg-border-muted text-fg-default px-6 py-2.5 rounded-xl border border-border-default transition-all duration-200 text-sm font-bold shadow-sm">
                                         <FaUserEdit className="text-accent" /> Edit Profile
                                     </Link>
                                 ) : (
                                     <>
                                         <button
                                             onClick={handleFollow}
-                                            className={`flex-1 md:flex-none px-6 py-2 rounded-xl transition-all duration-200 text-sm font-bold shadow-lg ${isFollowing
+                                            className={`flex-1 md:flex-none px-8 py-2.5 rounded-xl transition-all duration-200 text-sm font-black uppercase tracking-widest shadow-lg ${isFollowing
                                                 ? "bg-canvas-default text-fg-default border border-border-default hover:bg-border-muted"
                                                 : "bg-accent hover:bg-accent-hover text-white shadow-accent/20"
                                                 }`}
@@ -174,60 +197,61 @@ const Profile = () => {
                                             onClick={() => {
                                                 window.dispatchEvent(new CustomEvent('open-chat', { detail: profileUser }));
                                             }}
-                                            className="p-2.5 bg-canvas-default hover:bg-border-muted text-accent rounded-xl border border-border-default transition-all duration-200 shadow-sm"
+                                            className="p-3 bg-canvas-default hover:bg-border-muted text-accent rounded-xl border border-border-default transition-all duration-200 shadow-sm"
                                             title="Message"
                                         >
-                                            <FaComment size={18} />
+                                            <FaComment size={20} />
                                         </button>
                                     </>
                                 )}
                             </div>
                         </div>
 
-                        <p className="text-fg-muted mb-6 leading-relaxed max-w-2xl">{profileUser.bio || "Crafting something amazing in the dev world..."}</p>
+                        <p className="text-fg-muted mb-6 text-sm md:text-base leading-relaxed max-w-2xl">{profileUser.bio || "Crafting something amazing in the dev world..."}</p>
 
                         {profileUser.techStack && profileUser.techStack.length > 0 && (
-                            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
+                            <div className="flex flex-wrap gap-2 mb-6">
                                 {profileUser.techStack.map((tech, i) => (
-                                    <span key={i} className="bg-canvas-default text-accent px-3 py-1 rounded-lg text-xs font-mono border border-border-muted shadow-sm">
+                                    <span key={i} className="bg-canvas-default text-accent px-3 py-1 rounded-lg text-[10px] md:text-xs font-mono border border-border-muted shadow-sm">
                                         {tech}
                                     </span>
                                 ))}
                             </div>
                         )}
 
-                        <div className="flex justify-center md:justify-start gap-6 border-t border-border-muted pt-6 mt-2">
+                        <div className="flex gap-6 border-t border-border-muted pt-6 mt-2 overflow-x-auto no-scrollbar">
                             {profileUser.linkedinLink && (
-                                <a href={profileUser.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                <a href={profileUser.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-xs md:text-sm font-medium shrink-0">
                                     <FaLinkedin size={18} className="text-fg-default" /> LinkedIn
                                 </a>
                             )}
                             {profileUser.githubLink && (
-                                <a href={profileUser.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                <a href={profileUser.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-xs md:text-sm font-medium shrink-0">
                                     <FaGithub size={18} className="text-fg-default" /> GitHub
                                 </a>
                             )}
                             {profileUser.portfolioLink && (
-                                <a href={profileUser.portfolioLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-sm font-medium">
+                                <a href={profileUser.portfolioLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-muted hover:text-fg-default transition-colors text-xs md:text-sm font-medium shrink-0">
                                     <FaLink size={16} className="text-fg-default" /> Portfolio
                                 </a>
                             )}
                         </div>
                     </div>
                 </div>
+
             </div>
 
             {/* Posts Grid Section */}
-            <div className="border-t border-border-muted pt-8">
-                <div className="flex items-center justify-center gap-8 mb-8">
-                    <div className="flex items-center gap-2 text-fg-default">
-                        <BsGrid3X3 size={20} />
-                        <span className="text-sm font-bold uppercase tracking-wider">Posts</span>
+            <div className="border-t border-border-muted mt-4 md:mt-8 pt-6 md:pt-8 bg-canvas-default md:bg-transparent">
+                <div className="flex items-center justify-center gap-8 mb-4 md:mb-8">
+                    <div className="flex items-center gap-2 text-fg-default border-t-2 border-fg-default pt-3 -mt-[calc(24px+12px+3px)] md:-mt-[calc(32px+12px+3px)] transition-all">
+                        <BsGrid3X3 size={12} className="md:size-4" />
+                        <span className="text-[10px] md:text-sm font-black uppercase tracking-[0.2em]">Projects</span>
                     </div>
                 </div>
 
                 {posts.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+                    <div className="grid grid-cols-3 gap-px md:gap-4 lg:gap-6 px-px md:px-0">
                         {posts.map(post => {
                             const images = post.images && post.images.length > 0 ? post.images : (post.image ? [post.image] : []);
                             const thumbnail = images.length > 0 ? getOptimizedUrl(images[0]) : null;
@@ -236,37 +260,46 @@ const Profile = () => {
                                 <Link
                                     key={post._id}
                                     to={`/posts/${post._id}`}
-                                    className="relative aspect-square bg-canvas-default border border-border-muted overflow-hidden group cursor-pointer hover:opacity-90 transition-opacity"
+                                    className="relative aspect-square bg-canvas-subtle overflow-hidden group cursor-pointer hover:brightness-75 transition-all"
                                 >
                                     {thumbnail ? (
                                         <img
                                             src={thumbnail}
                                             alt={post.title}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-canvas-subtle">
-                                            <FaUser size={48} className="text-fg-muted opacity-20" />
+                                        <div className="w-full h-full flex items-center justify-center bg-canvas-default/50">
+                                            <FaUser size={24} className="text-fg-muted opacity-10" />
                                         </div>
                                     )}
 
-                                    {/* Hover Overlay */}
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
+                                    {/* Hover Overlay - Desktop Only */}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center gap-6">
                                         <div className="flex items-center gap-2 text-white font-bold">
-                                            <FaHeart size={20} />
-                                            <span>{post.likes.length}</span>
+                                            <FaHeart size={18} />
+                                            <span className="text-sm">{post.likes.length}</span>
                                         </div>
                                         <div className="flex items-center gap-2 text-white font-bold">
-                                            <FaComment size={20} />
-                                            <span>{post.comments.length}</span>
+                                            <FaComment size={18} />
+                                            <span className="text-sm">{post.comments.length}</span>
                                         </div>
                                     </div>
+
+                                    {/* Multiple images indicator */}
+                                    {images.length > 1 && (
+                                        <div className="absolute top-2 right-2 md:top-3 md:right-3 pointer-events-none">
+                                            <div className="bg-canvas-default/30 backdrop-blur-md p-1 rounded-md">
+                                                <BsGrid3X3 size={10} className="text-white drop-shadow-sm" />
+                                            </div>
+                                        </div>
+                                    )}
                                 </Link>
                             );
                         })}
                     </div>
                 ) : (
-                    <div className="py-20 text-center bg-canvas-subtle rounded-2xl border border-dashed border-border-default">
+                    <div className="py-20 text-center bg-canvas-subtle mx-4 md:mx-0 rounded-2xl border border-dashed border-border-default">
                         <BsGrid3X3 size={48} className="mx-auto mb-4 text-fg-muted opacity-20" />
                         <p className="text-fg-muted font-medium">No posts yet</p>
                         <p className="text-fg-muted text-sm mt-2">When {currentUser?._id === id ? 'you' : 'they'} post, they'll appear here</p>

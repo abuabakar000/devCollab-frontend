@@ -91,15 +91,15 @@ const OnboardingProfilePic = () => {
 
 
     return (
-        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 bg-canvas-default">
-            <div className="relative z-10 w-full max-w-xl -translate-y-6">
-                <div className="bg-canvas-subtle p-6 md:p-10 rounded-3xl shadow-2xl border border-border-default">
+        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-3 md:p-4 bg-canvas-default">
+            <div className="relative z-10 w-full max-w-xl md:-translate-y-6">
+                <div className="bg-canvas-subtle p-5 md:p-10 rounded-3xl shadow-2xl border border-border-default">
                     <div className="mb-6 text-center space-y-2">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-2 ring-1 ring-accent/20">
-                            <FaCamera size={28} />
+                        <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full bg-accent/10 text-accent mb-1 md:mb-2 ring-1 ring-accent/20">
+                            <FaCamera size={24} className="md:size-7" />
                         </div>
-                        <h2 className="text-3xl font-extrabold text-white tracking-tight">Add a profile picture</h2>
-                        <p className="text-fg-muted max-w-sm mx-auto text-lg">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Add a profile picture</h2>
+                        <p className="text-fg-muted max-w-sm mx-auto text-base md:text-lg">
                             Show the community who you are.
                         </p>
                     </div>
@@ -115,7 +115,7 @@ const OnboardingProfilePic = () => {
                             className="relative group cursor-pointer"
                             onClick={() => document.getElementById("profilePicInput").click()}
                         >
-                            <div className="w-32 h-32 rounded-full bg-canvas-default border-4 border-border-default overflow-hidden flex items-center justify-center text-fg-muted group-hover:border-accent transition-all duration-300 shadow-2xl">
+                            <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-canvas-default border-4 border-border-default overflow-hidden flex items-center justify-center text-fg-muted group-hover:border-accent transition-all duration-300 shadow-2xl">
                                 {preview ? (
                                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                                 ) : (
@@ -166,16 +166,16 @@ const OnboardingProfilePic = () => {
 
             {/* Cropper Modal */}
             {showCropper && (
-                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
-                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-hidden shadow-2xl border border-border-default">
-                        <div className="p-6 border-b border-border-default flex justify-between items-center">
+                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-4">
+                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-y-auto max-h-[calc(100vh-40px)] scrollbar-thin shadow-2xl border border-border-default">
+                        <div className="p-5 md:p-6 border-b border-border-default flex justify-between items-center sticky top-0 bg-canvas-subtle z-10">
                             <h3 className="text-xl font-black text-fg-default">Adjust Your Photo</h3>
                             <button onClick={() => setShowCropper(false)} className="p-2 hover:bg-canvas-default rounded-full text-fg-muted transition">
                                 <FaTimes />
                             </button>
                         </div>
 
-                        <div className="relative h-[400px] w-full bg-black">
+                        <div className="relative h-[300px] md:h-[400px] w-full bg-black">
                             <Cropper
                                 image={image}
                                 crop={crop}
@@ -189,7 +189,7 @@ const OnboardingProfilePic = () => {
                             />
                         </div>
 
-                        <div className="p-8 space-y-6">
+                        <div className="p-6 md:p-8 space-y-6">
                             <div className="space-y-4">
                                 <div className="flex justify-between text-xs font-black text-fg-muted uppercase tracking-widest">
                                     <span>Zoom</span>
@@ -209,21 +209,20 @@ const OnboardingProfilePic = () => {
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowCropper(false)}
-                                    className="btn-secondary flex-1 border border-border-default"
+                                    className="btn-secondary flex-1 border border-border-default h-12 md:h-14"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleCropSave}
-                                    className="btn-primary flex-1"
+                                    className="btn-primary flex-1 h-12 md:h-14"
                                 >
                                     <FaCheck /> Apply Frame
                                 </button>
-
                             </div>
                         </div>
                     </div>
-                    <p className="mt-6 text-fg-muted text-sm font-medium">Drag to reposition your photo</p>
+                    <p className="mt-4 text-fg-muted text-sm font-medium hidden md:block">Drag to reposition your photo</p>
                 </div>
             )}
         </div>

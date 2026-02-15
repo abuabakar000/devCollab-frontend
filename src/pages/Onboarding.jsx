@@ -40,16 +40,16 @@ const Onboarding = () => {
 
 
     return (
-        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 bg-canvas-default">
-            <div className="relative z-10 w-full max-w-xl -translate-y-4">
-                <div className="bg-canvas-subtle p-6 md:p-10 rounded-3xl shadow-2xl border border-border-default">
+        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-3 md:p-4 bg-canvas-default">
+            <div className="relative z-10 w-full max-w-xl md:-translate-y-4">
+                <div className="bg-canvas-subtle p-5 md:p-10 rounded-3xl shadow-2xl border border-border-default">
 
                     <div className="mb-4 text-center space-y-1">
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-accent/10 text-accent mb-2 ring-1 ring-accent/20">
-                            <FaRocket size={24} className="animate-bounce" />
+                        <div className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-accent/10 text-accent mb-1 md:mb-2 ring-1 ring-accent/20">
+                            <FaRocket size={20} className="md:size-6 animate-bounce" />
                         </div>
-                        <h2 className="text-3xl font-extrabold text-white tracking-tight">Set up your profile</h2>
-                        <p className="text-fg-muted max-w-sm mx-auto text-base">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Set up your profile</h2>
+                        <p className="text-fg-muted max-w-sm mx-auto text-sm md:text-base">
                             Let the developer world find you.
                         </p>
                     </div>
@@ -76,7 +76,7 @@ const Onboarding = () => {
                                         type="url"
                                         value={portfolioLink}
                                         onChange={(e) => setPortfolioLink(e.target.value)}
-                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-4 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20"
+                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-3 md:py-4 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-sm md:text-base"
                                         placeholder="https://yourportfolio.dev"
                                     />
                                 </div>
@@ -95,7 +95,7 @@ const Onboarding = () => {
                                         type="url"
                                         value={githubLink}
                                         onChange={(e) => setGithubLink(e.target.value)}
-                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-4 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20"
+                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-3 md:py-4 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-sm md:text-base"
                                         placeholder="https://github.com/username"
                                     />
                                 </div>
@@ -114,7 +114,7 @@ const Onboarding = () => {
                                         type="url"
                                         value={linkedinLink}
                                         onChange={(e) => setLinkedinLink(e.target.value)}
-                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-3.5 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20"
+                                        className="w-full bg-canvas-default/50 text-fg-default rounded-2xl pl-12 pr-4 py-3 md:py-3.5 border border-border-default hover:border-border-default/80 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-sm md:text-base"
                                         placeholder="https://linkedin.com/in/username"
                                     />
                                 </div>
