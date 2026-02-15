@@ -18,7 +18,7 @@ const Navbar = () => {
     const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
     const dropdownRef = useRef(null);
     const notifRef = useRef(null);
-    const { socket, notifications, setNotifications, unreadCount, setUnreadCount } = useSocket();
+    const { notifications, setNotifications, unreadCount, setUnreadCount } = useSocket();
 
     // Notification handling with shared socket
     useEffect(() => {

@@ -12,7 +12,7 @@ const ChatBox = () => {
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState("");
     const [conversations, setConversations] = useState([]);
-    const { socket, onlineUsers } = useSocket();
+    const { incomingMessage, setIncomingMessage } = useSocket();
     const scrollRef = useRef();
     const activeChatRef = useRef(activeChat);
     const isOpenRef = useRef(isOpen);
@@ -41,58 +41,44 @@ const ChatBox = () => {
         }
     };
 
-    // Socket listeners for messages
+    // Handle incoming Pusher messages
     useEffect(() => {
-        if (!socket) return;
+        if (!incomingMessage) return;
 
-        console.log("ChatBox: Registering socket listeners");
+        const data = incomingMessage;
+        console.log("Processing incoming message:", data);
 
-        const handleGetOnlineUsers = (users) => {
-            // Already handled in SocketContext if we want, but keeping for ChatBox specific logic
-            // Actually SocketContext provides onlineUsers, we can just use that
+        // Auto-open chat if it's not open
+        if (!isOpenRef.current) {
+            console.log("Auto-opening chat...");
+            setIsOpen(true);
+            isOpenRef.current = true;
+        }
+
+        const senderData = {
+            _id: data.senderId,
+            name: data.senderName,
+            profilePic: data.senderPic
         };
 
-        const handleGetMessage = (data) => {
-            console.log("REAL-TIME MESSAGE RECEIVED:", data);
+        // Switch to the sender if not already active
+        if (!activeChatRef.current || activeChatRef.current._id !== data.senderId) {
+            console.log("Switching active chat to:", data.senderName);
+            activeChatRef.current = senderData;
+            setActiveChat(senderData);
+        }
 
-            // Auto-open chat if it's not open
-            if (!isOpenRef.current) {
-                console.log("Auto-opening chat...");
-                setIsOpen(true);
-                isOpenRef.current = true;
-            }
+        // If the chat is open with this user, update messages
+        if (activeChatRef.current?._id === data.senderId) {
+            setMessages((prev) => [...prev, { sender: data.senderId, text: data.text }]);
+        }
 
-            const senderData = {
-                _id: data.senderId,
-                name: data.senderName,
-                profilePic: data.senderPic
-            };
+        // Always trigger a refresh of conversations to update previews/list
+        fetchConversations();
 
-            // Switch to the sender if not already active
-            if (!activeChatRef.current || activeChatRef.current._id !== data.senderId) {
-                console.log("Switching active chat to:", data.senderName);
-                activeChatRef.current = senderData;
-                setActiveChat(senderData);
-            }
-
-            // If the chat is open with this user, update messages
-            if (activeChatRef.current?._id === data.senderId) {
-                setMessages((prev) => [...prev, { sender: data.senderId, text: data.text }]);
-            }
-
-            // Always trigger a refresh of conversations to update previews/list
-            fetchConversations();
-        };
-
-        socket.on("getOnlineUsers", handleGetOnlineUsers);
-        socket.on("getMessage", handleGetMessage);
-
-        return () => {
-            console.log("ChatBox: Cleaning up socket listeners");
-            socket.off("getOnlineUsers", handleGetOnlineUsers);
-            socket.off("getMessage", handleGetMessage);
-        };
-    }, [socket]); // Only depend on socket
+        // Clear the incoming message so it doesn't re-trigger
+        setIncomingMessage(null);
+    }, [incomingMessage]);
 
     // Initial fetch of conversations when opened
     useEffect(() => {
@@ -147,13 +133,7 @@ const ChatBox = () => {
 
         try {
             const { data } = await api.post("/messages", messageData);
-            socket.emit("sendMessage", {
-                senderId: user._id,
-                senderName: user.name,
-                senderPic: user.profilePic,
-                receiverId: activeChat._id,
-                text: inputText,
-            });
+            // Server will trigger Pusher event for the receiver
             setMessages((prev) => [...prev, data]);
             setInputText("");
             // Refresh conversations list to update preview of the chat we just sent to
@@ -192,9 +172,6 @@ const ChatBox = () => {
                                             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-border-muted flex items-center justify-center text-fg-muted">
                                                 <FaUser size={12} />
                                             </div>
-                                        )}
-                                        {onlineUsers.some(u => u.userId === activeChat._id) && (
-                                            <div className="absolute -bottom-0.5 -right-0.5 w-2 md:w-2.5 h-2 md:h-2.5 bg-green-500 border-2 border-canvas-subtle rounded-full"></div>
                                         )}
                                     </div>
                                     <div className="min-w-0">
@@ -235,9 +212,6 @@ const ChatBox = () => {
                                                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-border-muted flex items-center justify-center text-fg-muted">
                                                         <FaUser size={14} />
                                                     </div>
-                                                )}
-                                                {onlineUsers.some(u => u.userId === c._id) && (
-                                                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 md:w-3 h-2.5 md:h-3 bg-green-500 border-2 border-canvas-subtle rounded-full"></div>
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0">

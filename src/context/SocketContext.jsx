@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
+import Pusher from "pusher-js";
 import AuthContext from "./AuthContext";
 
 const SocketContext = createContext();
@@ -8,53 +8,60 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
     const { user } = useContext(AuthContext);
-    const [socket, setSocket] = useState(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [pusher, setPusher] = useState(null);
+    const [channel, setChannel] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [incomingMessage, setIncomingMessage] = useState(null);
 
     useEffect(() => {
         if (user) {
-            const socketInstance = io(import.meta.env.VITE_API_URL, {
-                query: { userId: user._id },
+            const pusherInstance = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+                cluster: import.meta.env.VITE_PUSHER_CLUSTER,
             });
 
-            setSocket(socketInstance);
+            const userChannel = pusherInstance.subscribe(`user-${user._id}`);
 
-            socketInstance.emit("join", user._id);
-
-            socketInstance.on("getOnlineUsers", (users) => {
-                setOnlineUsers(users);
-            });
-
-            socketInstance.on("newNotification", (notification) => {
+            userChannel.bind("new-notification", (notification) => {
                 setNotifications((prev) => [notification, ...prev]);
                 setUnreadCount((prev) => prev + 1);
-
-                // Optional: Play sound or show toast
                 console.log("New Notification received:", notification);
             });
 
+            userChannel.bind("new-message", (data) => {
+                console.log("REAL-TIME MESSAGE RECEIVED via Pusher:", data);
+                setIncomingMessage(data);
+            });
+
+            setPusher(pusherInstance);
+            setChannel(userChannel);
+
             return () => {
-                socketInstance.disconnect();
-                setSocket(null);
+                userChannel.unbind_all();
+                pusherInstance.unsubscribe(`user-${user._id}`);
+                pusherInstance.disconnect();
+                setPusher(null);
+                setChannel(null);
             };
         } else {
-            if (socket) {
-                socket.disconnect();
-                setSocket(null);
+            if (pusher) {
+                pusher.disconnect();
+                setPusher(null);
+                setChannel(null);
             }
         }
     }, [user]);
 
     return (
         <SocketContext.Provider value={{
-            socket,
-            onlineUsers,
+            pusher,
+            channel,
             notifications,
             setNotifications,
             unreadCount,
-            setUnreadCount
+            setUnreadCount,
+            incomingMessage,
+            setIncomingMessage,
         }}>
             {children}
         </SocketContext.Provider>
