@@ -20,7 +20,22 @@ export const SocketProvider = ({ children }) => {
                 cluster: import.meta.env.VITE_PUSHER_CLUSTER,
             });
 
+            // Log connection state for debugging
+            pusherInstance.connection.bind("connected", () => {
+                console.log("✅ Pusher connected");
+            });
+            pusherInstance.connection.bind("error", (err) => {
+                console.error("❌ Pusher connection error:", err);
+            });
+
             const userChannel = pusherInstance.subscribe(`user-${user._id}`);
+
+            userChannel.bind("pusher:subscription_succeeded", () => {
+                console.log(`✅ Subscribed to channel: user-${user._id}`);
+            });
+            userChannel.bind("pusher:subscription_error", (err) => {
+                console.error("❌ Channel subscription error:", err);
+            });
 
             userChannel.bind("new-notification", (notification) => {
                 setNotifications((prev) => [notification, ...prev]);
