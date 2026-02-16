@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import AuthContext from "../context/AuthContext";
 import api from "../services/api";
@@ -7,6 +8,8 @@ import { IoSend, IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 const ChatBox = () => {
     const { user } = useContext(AuthContext);
+    const location = useLocation();
+    const isPostDetail = location.pathname.startsWith("/posts/");
     const [isOpen, setIsOpen] = useState(false);
     const [activeChat, setActiveChat] = useState(null); // The user you're chatting with
     const [messages, setMessages] = useState([]);
@@ -279,7 +282,7 @@ const ChatBox = () => {
             )}
 
             {/* Toggle Button - Immersive size on mobile */}
-            {!isOpen && (
+            {!isOpen && !isPostDetail && (
                 <button
                     onClick={() => setIsOpen(true)}
                     className="btn-primary w-14 h-14 md:w-16 md:h-16 rounded-full p-0 shadow-2xl hover:scale-110 active:scale-90 transition-all group border-4 border-canvas-default flex items-center justify-center relative"

@@ -131,18 +131,20 @@ const Profile = () => {
 
                         {/* Stats Row for Mobile (beside PFP) */}
                         <div className="flex-1 md:hidden">
-                            <div className="flex justify-between items-center text-center gap-4">
-                                <div className="flex flex-col flex-1 min-w-0">
+                            <div className="flex justify-center items-center text-center gap-1.5 px-1">
+                                <div className="flex flex-col min-w-0">
                                     <span className="font-black text-lg text-fg-default">{posts.length}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Posts</span>
+                                    <span className="text-fg-muted text-[9px] uppercase tracking-tighter font-bold truncate">Posts</span>
                                 </div>
-                                <div className="flex flex-col flex-1 min-w-0 cursor-pointer" onClick={openFollowersModal}>
+                                <div className="w-px h-6 bg-border-muted/30 mx-1"></div>
+                                <div className="flex flex-col min-w-0 cursor-pointer" onClick={openFollowersModal}>
                                     <span className="font-black text-lg text-fg-default">{profileUser.followers?.length || 0}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Followers</span>
+                                    <span className="text-fg-muted text-[9px] uppercase tracking-tighter font-bold truncate">Followers</span>
                                 </div>
-                                <div className="flex flex-col flex-1 min-w-0 cursor-pointer" onClick={openFollowingModal}>
+                                <div className="w-px h-6 bg-border-muted/30 mx-1"></div>
+                                <div className="flex flex-col min-w-0 cursor-pointer" onClick={openFollowingModal}>
                                     <span className="font-black text-lg text-fg-default">{profileUser.following?.length || 0}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Following</span>
+                                    <span className="text-fg-muted text-[9px] uppercase tracking-tighter font-bold truncate">Following</span>
                                 </div>
                             </div>
                         </div>

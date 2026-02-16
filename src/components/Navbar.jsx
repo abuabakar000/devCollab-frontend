@@ -105,8 +105,8 @@ const Navbar = () => {
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center h-[70px]">
                     {/* Logo/Brand */}
-                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden -ml-2 md:ml-0">
-                        <img src={logo} alt="DevCollab" className="h-[200px] md:h-[160px] w-auto object-contain select-none translate-y-1" style={{ filter: 'brightness(1.2)' }} />
+                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden shrink-0 -ml-2 md:ml-0">
+                        <img src={logo} alt="DevCollab" className="h-[110px] md:h-[130px] w-auto object-contain select-none translate-y-1.5" style={{ filter: 'brightness(1.2)' }} />
                     </Link>
 
                     {/* Right Section */}
@@ -195,7 +195,7 @@ const Navbar = () => {
                                                 const chatEvent = new CustomEvent('toggle-chat');
                                                 window.dispatchEvent(chatEvent);
                                             }}
-                                            className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110"
+                                            className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110 shrink-0"
                                             title="Messages"
                                         >
                                             <IoChatbubbleEllipsesSharp className="text-xl md:text-lg" />
@@ -203,7 +203,7 @@ const Navbar = () => {
                                         </button>
 
                                         {/* Notifications */}
-                                        <div className="relative" ref={notifRef}>
+                                        <div className="relative shrink-0" ref={notifRef}>
                                             <button
                                                 onClick={handleMarkAsRead}
                                                 className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110"
@@ -244,9 +244,9 @@ const Navbar = () => {
                                                                 >
                                                                     <div className="relative shrink-0">
                                                                         {n.sender?.profilePic ? (
-                                                                            <img src={n.sender.profilePic} className="w-10 h-10 md:w-8 md:h-8 rounded-full border border-border-default object-cover" alt="" />
+                                                                            <img src={n.sender.profilePic} className="w-10 h-10 md:w-8 md:h-8 rounded-full border border-border-default object-cover shrink-0" alt="" />
                                                                         ) : (
-                                                                            <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-canvas-default flex items-center justify-center text-fg-muted border border-border-default">
+                                                                            <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-canvas-default flex items-center justify-center text-fg-muted border border-border-default shrink-0">
                                                                                 <FaUser size={14} />
                                                                             </div>
                                                                         )}
@@ -274,7 +274,7 @@ const Navbar = () => {
                                 )}
 
                                 {user ? (
-                                    <div className="relative" ref={dropdownRef}>
+                                    <div className="relative shrink-0" ref={dropdownRef}>
                                         <button
                                             onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                                             className="flex items-center space-x-2 focus:outline-none group"
