@@ -13,8 +13,8 @@ const getOptimizedUrl = (url) => {
 
 const PostCard = ({ post }) => {
     const { user } = useContext(AuthContext);
-    const [likes, setLikes] = useState(post.likes.length);
-    const [isLiked, setIsLiked] = useState(post.likes.includes(user?._id));
+    const [likes, setLikes] = useState(post?.likes?.length || 0);
+    const [isLiked, setIsLiked] = useState(post?.likes?.includes(user?._id) || false);
 
     const handleLike = async () => {
         if (!user) return; // Or redirect to login
@@ -46,19 +46,23 @@ const PostCard = ({ post }) => {
             </Link>
             <div className="p-4 md:p-8">
                 <div className="flex items-center mb-4 md:mb-6">
-                    <Link to={`/profile/${post.user._id}`} className="flex items-center group/user">
-                        {post.user.profilePic ? (
-                            <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-8 h-8 md:w-12 md:h-12 rounded-xl mr-3 object-cover border border-border-default group-hover/user:border-accent transition-colors" />
-                        ) : (
-                            <div className="w-8 h-8 md:w-12 md:h-12 rounded-xl bg-canvas-default border border-border-muted flex items-center justify-center mr-3 group-hover/user:border-accent transition-colors">
-                                <FaUser className="text-fg-muted size-3 md:size-5" />
+                    {post?.user && (
+                        <Link to={`/profile/${post.user._id}`} className="flex items-center group/user">
+                            {post.user.profilePic ? (
+                                <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-8 h-8 md:w-12 md:h-12 rounded-xl mr-3 object-cover border border-border-default group-hover/user:border-accent transition-colors" />
+                            ) : (
+                                <div className="w-8 h-8 md:w-12 md:h-12 rounded-xl bg-canvas-default border border-border-muted flex items-center justify-center mr-3 group-hover/user:border-accent transition-colors">
+                                    <FaUser className="text-fg-muted size-3 md:size-5" />
+                                </div>
+                            )}
+                            <div>
+                                <h3 className="font-bold text-sm md:text-lg text-fg-default group-hover/user:text-accent transition">{post.user.name}</h3>
+                                <p className="text-fg-muted text-[10px] md:text-xs uppercase tracking-widest font-black opacity-60">
+                                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Recent'}
+                                </p>
                             </div>
-                        )}
-                        <div>
-                            <h3 className="font-bold text-sm md:text-lg text-fg-default group-hover/user:text-accent transition">{post.user.name}</h3>
-                            <p className="text-fg-muted text-[10px] md:text-xs uppercase tracking-widest font-black opacity-60">{new Date(post.createdAt).toLocaleDateString()}</p>
-                        </div>
-                    </Link>
+                        </Link>
+                    )}
                 </div>
 
                 <Link to={`/posts/${post._id}`} className="block mb-4">
@@ -85,9 +89,9 @@ const PostCard = ({ post }) => {
                             <FaHeart size={16} className={isLiked ? "animate-jump" : ""} />
                             <span>{likes}</span>
                         </button>
-                        <Link to={`/posts/${post._id}`} className="flex items-center space-x-2 text-fg-muted hover:text-accent transition text-xs md:text-sm font-bold uppercase tracking-wider">
+                        <Link to={`/posts/${post?._id}`} className="flex items-center space-x-2 text-fg-muted hover:text-accent transition text-xs md:text-sm font-bold uppercase tracking-wider">
                             <FaComment size={16} />
-                            <span>{post.comments.length}</span>
+                            <span>{post?.comments?.length || 0}</span>
                         </Link>
                     </div>
 

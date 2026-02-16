@@ -27,15 +27,28 @@ const PostDetail = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [showPostOptions, setShowPostOptions] = useState(false);
     const [showPostDeleteModal, setShowPostDeleteModal] = useState(false);
+    const [showCommentsModal, setShowCommentsModal] = useState(false);
+
+    // Prevent scrolling when comments modal is open
+    useEffect(() => {
+        if (showCommentsModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [showCommentsModal]);
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 const { data } = await api.get(`/posts/${id}`);
                 setPost(data);
-                setLikesCount(data.likes.length);
-                setIsLiked(data.likes.includes(user?._id));
-                setIsFollowing(data.user.followers?.includes(user?._id));
+                setLikesCount(data?.likes?.length || 0);
+                setIsLiked(data?.likes?.includes(user?._id) || false);
+                setIsFollowing(data?.user?.followers?.includes(user?._id) || false);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching post:", error);
@@ -110,25 +123,27 @@ const PostDetail = () => {
 
     if (!post) return <div className="text-center py-20 text-fg-muted">Project not found.</div>;
 
-    const isOwnPost = user?._id === post.user._id;
-    const images = post.images && post.images.length > 0 ? post.images : (post.image ? [post.image] : []);
+    const isOwnPost = user?._id === post?.user?._id;
+    const images = post?.images && post?.images?.length > 0 ? post.images : (post?.image ? [post.image] : []);
+
 
     return (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center lg:p-4 overflow-hidden">
             {/* Close Button - Always visible, better placed on mobile */}
             <button
                 onClick={() => navigate(-1)}
-                className="fixed top-4 right-4 z-[70] text-white hover:text-gray-300 bg-black/40 hover:bg-black/60 p-2.5 rounded-full transition shadow-lg lg:top-6 lg:right-6 backdrop-blur-md border border-white/10"
+                className="fixed top-4 right-4 z-[70] text-white hover:text-gray-300 bg-black/40 hover:bg-black/60 p-2 rounded-full transition shadow-lg lg:top-6 lg:right-6 backdrop-blur-md border border-white/10"
             >
-                <FaTimes size={18} />
+                <FaTimes size={14} className="md:hidden" />
+                <FaTimes size={18} className="hidden md:block" />
             </button>
 
             <div className="w-full h-full lg:max-w-7xl lg:h-[90vh] mx-auto bg-canvas-subtle lg:rounded-3xl overflow-hidden border border-border-default shadow-2xl flex flex-col lg:flex-row relative">
 
                 {/* Mobile Header (Top) - Only on small screens */}
                 <div className="lg:hidden p-4 pt-16 border-b border-border-muted flex items-center justify-between bg-canvas-subtle shrink-0">
-                    <Link to={`/profile/${post.user._id}`} className="flex items-center group">
-                        {post.user.profilePic ? (
+                    <Link to={`/profile/${post?.user?._id}`} className="flex items-center group">
+                        {post?.user?.profilePic ? (
                             <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-9 h-9 rounded-full object-cover border border-border-default" />
                         ) : (
                             <div className="w-9 h-9 rounded-full bg-canvas-default border border-border-default flex items-center justify-center">
@@ -136,7 +151,7 @@ const PostDetail = () => {
                             </div>
                         )}
                         <div className="ml-3">
-                            <h3 className="font-bold text-sm text-fg-default group-hover:text-accent transition">{post.user.name}</h3>
+                            <h3 className="font-bold text-sm text-fg-default group-hover:text-accent transition">{post?.user?.name || 'Developer'}</h3>
                         </div>
                     </Link>
                     {user && post.user._id !== user._id && (
@@ -153,7 +168,7 @@ const PostDetail = () => {
                 </div>
 
                 {/* Left/Top Side: Image Gallery */}
-                <div className="lg:w-2/3 h-[50vh] md:h-[60vh] lg:h-full bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden">
+                <div className="lg:w-2/3 h-[40vh] md:h-[60vh] lg:h-full bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden">
                     {images.length > 0 ? (
                         <>
                             <img
@@ -198,8 +213,8 @@ const PostDetail = () => {
                 <div className="lg:w-1/3 flex flex-col bg-canvas-subtle overflow-y-auto lg:overflow-hidden">
                     {/* Desktop Header (Sidebar Top) - Hidden on Mobile */}
                     <div className="hidden lg:flex p-6 border-b border-border-muted items-center justify-between bg-canvas-default/30 backdrop-blur-sm">
-                        <Link to={`/profile/${post.user._id}`} className="flex items-center group">
-                            {post.user.profilePic ? (
+                        <Link to={`/profile/${post?.user?._id}`} className="flex items-center group">
+                            {post?.user?.profilePic ? (
                                 <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-11 h-11 rounded-xl object-cover border border-border-default" />
                             ) : (
                                 <div className="w-11 h-11 rounded-xl bg-canvas-default border border-border-default flex items-center justify-center">
@@ -207,10 +222,10 @@ const PostDetail = () => {
                                 </div>
                             )}
                             <div className="ml-3">
-                                <h3 className="font-bold text-fg-default group-hover:text-accent transition">{post.user.name}</h3>
+                                <h3 className="font-bold text-fg-default group-hover:text-accent transition">{post?.user?.name || 'Developer'}</h3>
                             </div>
                         </Link>
-                        {user && post.user._id !== user._id && (
+                        {user && post?.user?._id !== user._id && (
                             <button
                                 onClick={handleFollow}
                                 className={`font-black text-[10px] uppercase tracking-widest px-5 py-2 rounded-xl transition-all duration-200 border ${isFollowing
@@ -236,9 +251,12 @@ const PostDetail = () => {
                                     <FaHeart size={20} className={isLiked ? "animate-jump" : ""} />
                                     <span className="text-sm font-black">{likesCount}</span>
                                 </button>
-                                <button className="flex items-center gap-2 text-fg-default">
+                                <button
+                                    onClick={() => setShowCommentsModal(true)}
+                                    className="flex items-center gap-2 text-fg-default hover:text-accent transition-colors"
+                                >
                                     <FaComment size={20} />
-                                    <span className="text-sm font-black">{post.comments.length}</span>
+                                    <span className="text-sm font-black">{post?.comments?.length || 0}</span>
                                 </button>
                             </div>
                             {post.githubRepoLink && (
@@ -300,16 +318,16 @@ const PostDetail = () => {
                                 </a>
                             )}
 
-                            {/* Comments Section */}
-                            <div className="pt-4 border-t border-border-muted/30">
+                            {/* Comments Section - Desktop Only */}
+                            <div className="hidden lg:block pt-4 border-t border-border-muted/30">
                                 <h4 className="text-[10px] font-black text-fg-muted uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                                    Pulse Activity <span className="bg-accent text-white px-2 py-0.5 rounded-full text-[9px] animate-pulse">{post.comments.length}</span>
+                                    Pulse Activity <span className="bg-accent text-white px-2 py-0.5 rounded-full text-[9px] animate-pulse">{post?.comments?.length || 0}</span>
                                 </h4>
                                 <div className="space-y-5">
-                                    {post.comments.map((comment, i) => (
+                                    {post?.comments?.map((comment, i) => (
                                         <div key={i} className="flex gap-3 group animate-in fade-in slide-in-from-bottom-2 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
-                                            <Link to={`/profile/${comment.user._id}`} className="shrink-0 transition-all hover:scale-105">
-                                                {comment.user.profilePic ? (
+                                            <Link to={`/profile/${comment?.user?._id}`} className="shrink-0 transition-all hover:scale-105">
+                                                {comment?.user?.profilePic ? (
                                                     <img src={getOptimizedUrl(comment.user.profilePic)} className="w-7 h-7 rounded-lg object-cover border border-border-muted" />
                                                 ) : (
                                                     <div className="w-7 h-7 rounded-lg bg-canvas-default flex items-center justify-center border border-border-muted">
@@ -320,12 +338,12 @@ const PostDetail = () => {
                                             <div className="flex-1 min-w-0">
                                                 <div className="bg-canvas-default/50 rounded-2xl p-3 border border-border-muted/30 shadow-sm">
                                                     <div className="flex justify-between items-center mb-1">
-                                                        <Link to={`/profile/${comment.user._id}`} className="font-bold text-[11px] text-fg-default hover:text-accent transition-colors truncate pr-2">
-                                                            {comment.user.name}
+                                                        <Link to={`/profile/${comment?.user?._id}`} className="font-bold text-[11px] text-fg-default hover:text-accent transition-colors truncate pr-2">
+                                                            {comment?.user?.name}
                                                         </Link>
                                                         <div className="flex items-center gap-2 shrink-0">
                                                             <span className="text-[9px] text-fg-muted opacity-50">{new Date(comment.createdAt).toLocaleDateString()}</span>
-                                                            {user?._id === comment.user._id && (
+                                                            {user?._id === comment?.user?._id && (
                                                                 <button
                                                                     onClick={() => handleDeleteClick(comment._id)}
                                                                     className="text-red-500/50 hover:text-red-500 transition-colors p-1"
@@ -340,7 +358,7 @@ const PostDetail = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    {post.comments.length === 0 && (
+                                    {(post?.comments?.length || 0) === 0 && (
                                         <div className="py-10 text-center space-y-3">
                                             <FaComment size={24} className="mx-auto text-fg-muted opacity-10" />
                                             <p className="text-[10px] font-bold text-fg-muted uppercase tracking-widest italic">Silent Pulse. Be the first.</p>
@@ -351,8 +369,8 @@ const PostDetail = () => {
                         </div>
                     </div>
 
-                    {/* Footer Actions (Desktop: Interaction row, Both: Comment Input) */}
-                    <div className="p-4 md:p-6 border-t border-border-muted bg-canvas-subtle/95 backdrop-blur-md sticky bottom-0 shrink-0">
+                    {/* Footer Actions (Desktop Only) */}
+                    <div className="hidden lg:block p-4 md:p-6 border-t border-border-muted bg-canvas-subtle/95 backdrop-blur-md sticky bottom-0 shrink-0">
                         {/* Desktop Only Actions */}
                         <div className="hidden lg:flex items-center gap-6 mb-4">
                             <button
@@ -362,7 +380,7 @@ const PostDetail = () => {
                                 <FaHeart size={18} className={isLiked ? "animate-jump" : ""} /> {likesCount}
                             </button>
                             <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-fg-muted">
-                                <FaComment size={18} /> {post.comments.length}
+                                <FaComment size={18} /> {post?.comments?.length || 0}
                             </div>
                         </div>
 
@@ -393,6 +411,89 @@ const PostDetail = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Comments Bottom Sheet */}
+            {showCommentsModal && (
+                <div className="fixed inset-0 z-[100] lg:hidden">
+                    <div
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+                        onClick={() => setShowCommentsModal(false)}
+                    ></div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-canvas-subtle rounded-t-[32px] border-t border-border-default h-[80vh] flex flex-col animate-in slide-in-from-bottom duration-300">
+                        {/* Handle */}
+                        <div className="w-full flex justify-center p-4" onClick={() => setShowCommentsModal(false)}>
+                            <div className="w-12 h-1.5 bg-border-muted rounded-full"></div>
+                        </div>
+
+                        <div className="px-6 pb-4 border-b border-border-muted/30 flex justify-between items-center">
+                            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-fg-default">Comments</h3>
+                            <button onClick={() => setShowCommentsModal(false)} className="text-fg-muted">
+                                <FaTimes size={16} />
+                            </button>
+                        </div>
+
+                        {/* Comments List */}
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
+                            {post?.comments?.map((comment, i) => (
+                                <div key={i} className="flex gap-4">
+                                    <Link to={`/profile/${comment?.user?._id}`} className="shrink-0">
+                                        {comment?.user?.profilePic ? (
+                                            <img src={getOptimizedUrl(comment.user.profilePic)} className="w-8 h-8 rounded-xl object-cover border border-border-muted" />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-xl bg-canvas-default flex items-center justify-center border border-border-muted">
+                                                <FaUser size={12} className="text-fg-muted" />
+                                            </div>
+                                        )}
+                                    </Link>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <Link to={`/profile/${comment?.user?._id}`} className="font-bold text-xs text-fg-default">
+                                                {comment?.user?.name}
+                                            </Link>
+                                            <span className="text-[10px] text-fg-muted opacity-60">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <p className="text-xs text-fg-muted leading-relaxed">{comment.text}</p>
+                                        {user?._id === comment?.user?._id && (
+                                            <button
+                                                onClick={() => handleDeleteClick(comment._id)}
+                                                className="text-[10px] font-bold text-red-500/70 mt-2 uppercase tracking-widest"
+                                            >
+                                                Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            {(post?.comments?.length || 0) === 0 && (
+                                <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-30 py-20">
+                                    <FaComment size={48} />
+                                    <p className="font-black uppercase tracking-widest text-xs">No comments yet</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Comment Input */}
+                        <div className="p-6 border-t border-border-muted bg-canvas-default">
+                            <form onSubmit={(e) => { handleComment(e); }} className="flex gap-3">
+                                <input
+                                    type="text"
+                                    value={commentText}
+                                    onChange={(e) => setCommentText(e.target.value)}
+                                    placeholder="Add a comment..."
+                                    className="flex-1 bg-canvas-subtle border border-border-default rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={!commentText.trim()}
+                                    className="bg-accent text-white p-4 rounded-2xl disabled:opacity-50 transition shadow-lg shadow-accent/20"
+                                >
+                                    <FaPaperPlane size={16} />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Delete Confirmation Modal */}
             {showDeleteModal && (
