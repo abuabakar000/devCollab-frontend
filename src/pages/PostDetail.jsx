@@ -28,6 +28,11 @@ const PostDetail = () => {
     const [showPostOptions, setShowPostOptions] = useState(false);
     const [showPostDeleteModal, setShowPostDeleteModal] = useState(false);
     const [showCommentsModal, setShowCommentsModal] = useState(false);
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+
+    // Minimum distance for a swipe to be recognized (in pixels)
+    const minSwipeDistance = 50;
 
     // Prevent scrolling when comments modal is open
     useEffect(() => {
@@ -119,6 +124,28 @@ const PostDetail = () => {
         }
     };
 
+    const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe && images.length > 1) {
+            setCurrentImageIndex((prev) => (prev + 1) % images.length);
+        } else if (isRightSwipe && images.length > 1) {
+            setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+        }
+    };
+
     if (loading) return <Loader text="Unfolding the project details..." />;
 
     if (!post) return <div className="text-center py-20 text-fg-muted">Project not found.</div>;
@@ -168,7 +195,12 @@ const PostDetail = () => {
                 </div>
 
                 {/* Left/Top Side: Image Gallery */}
-                <div className="lg:w-2/3 h-[40vh] md:h-[60vh] lg:h-full bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden">
+                <div
+                    className="lg:w-2/3 h-[40vh] md:h-[60vh] lg:h-full bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden touch-pan-y"
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                >
                     {images.length > 0 ? (
                         <>
                             <img
