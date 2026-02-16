@@ -132,10 +132,10 @@ const Navbar = () => {
                                                 <img
                                                     src={getOptimizedUrl(user.profilePic)}
                                                     alt="Profile"
-                                                    className="w-8 h-8 rounded-full object-cover border-2 border-border-default group-hover:border-accent transition-colors"
+                                                    className="w-8 h-8 rounded-full object-cover border-2 border-border-default group-hover:border-accent transition-colors shrink-0"
                                                 />
                                             ) : (
-                                                <div className="w-8 h-8 rounded-full bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted group-hover:border-accent group-hover:text-accent transition-all">
+                                                <div className="w-8 h-8 rounded-full bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted group-hover:border-accent group-hover:text-accent transition-all shrink-0">
                                                     <FaUser size={14} />
                                                 </div>
                                             )}
@@ -284,10 +284,10 @@ const Navbar = () => {
                                                     <img
                                                         src={getOptimizedUrl(user.profilePic)}
                                                         alt="Profile"
-                                                        className="w-8 h-8 rounded-full object-cover border-2 border-border-default group-hover:border-accent transition-colors"
+                                                        className="w-8 h-8 rounded-full object-cover border-2 border-border-default group-hover:border-accent transition-colors shrink-0"
                                                     />
                                                 ) : (
-                                                    <div className="w-8 h-8 rounded-full bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted group-hover:border-accent group-hover:text-accent transition-all">
+                                                    <div className="w-8 h-8 rounded-full bg-canvas-default border-2 border-border-default flex items-center justify-center text-fg-muted group-hover:border-accent group-hover:text-accent transition-all shrink-0">
                                                         <FaUser size={14} />
                                                     </div>
                                                 )}

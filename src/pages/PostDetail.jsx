@@ -153,7 +153,7 @@ const PostDetail = () => {
                 </div>
 
                 {/* Left/Top Side: Image Gallery */}
-                <div className="lg:w-2/3 bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden">
+                <div className="lg:w-2/3 h-[50vh] md:h-[60vh] lg:h-full bg-black flex items-center justify-center relative border-r border-border-muted group shrink-0 lg:shrink-1 overflow-hidden">
                     {images.length > 0 ? (
                         <>
                             <img

@@ -131,18 +131,18 @@ const Profile = () => {
 
                         {/* Stats Row for Mobile (beside PFP) */}
                         <div className="flex-1 md:hidden">
-                            <div className="flex justify-between items-center text-center">
-                                <div className="flex flex-col">
+                            <div className="flex justify-between items-center text-center gap-4">
+                                <div className="flex flex-col flex-1 min-w-0">
                                     <span className="font-black text-lg text-fg-default">{posts.length}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Posts</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Posts</span>
                                 </div>
-                                <div className="flex flex-col cursor-pointer" onClick={openFollowersModal}>
+                                <div className="flex flex-col flex-1 min-w-0 cursor-pointer" onClick={openFollowersModal}>
                                     <span className="font-black text-lg text-fg-default">{profileUser.followers?.length || 0}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Followers</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Followers</span>
                                 </div>
-                                <div className="flex flex-col cursor-pointer" onClick={openFollowingModal}>
+                                <div className="flex flex-col flex-1 min-w-0 cursor-pointer" onClick={openFollowingModal}>
                                     <span className="font-black text-lg text-fg-default">{profileUser.following?.length || 0}</span>
-                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold">Following</span>
+                                    <span className="text-fg-muted text-[10px] uppercase tracking-wider font-bold truncate">Following</span>
                                 </div>
                             </div>
                         </div>
