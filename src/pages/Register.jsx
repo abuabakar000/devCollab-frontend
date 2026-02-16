@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../assets/logo-onboard.png";
+import logoMobile from "../assets/logo-mobile.png";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -31,10 +32,10 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-[calc(100vh-70px)] flex flex-col lg:flex-row lg:h-[calc(100vh-70px)] lg:overflow-hidden">
+        <div className="min-h-screen flex flex-col lg:flex-row lg:h-screen lg:overflow-hidden">
 
-            {/* Left Panel: Branding */}
-            <div className="w-full lg:w-1/2 bg-canvas-default flex flex-col items-center justify-center py-12 px-6 lg:p-12 relative overflow-hidden border-b lg:border-b-0 lg:border-r border-border-default shrink-0">
+            {/* Left Panel: Branding - Hidden on mobile, sticky on large screens */}
+            <div className="hidden lg:flex lg:w-1/2 bg-canvas-default flex-col items-center justify-center py-12 px-6 lg:p-12 relative overflow-hidden border-b lg:border-b-0 lg:border-r border-border-default shrink-0">
                 {/* Dynamic Animated Background */}
                 <div className="absolute inset-0 z-0">
                     {/* Primary Glow */}
@@ -71,8 +72,13 @@ const Register = () => {
             </div>
 
             {/* Right Panel: Register Form */}
-            <div className="lg:w-1/2 bg-canvas-subtle flex items-center justify-center p-8 md:p-12">
-                <div className="w-full  max-w-md animate-in fade-in slide-in-from-right-8 duration-700">
+            <div className="w-full lg:w-1/2 bg-canvas-subtle flex flex-col items-center lg:h-full lg:overflow-y-auto scrollbar-thin">
+                {/* Mobile Header - Logo bar only on small screens */}
+                <div className="lg:hidden w-full bg-canvas-default py-6 flex items-center justify-center border-b border-border-default mb-8">
+                    <img src={logoMobile} alt="DevCollab" className="h-14 w-auto" />
+                </div>
+
+                <div className="w-full max-w-md md:max-w-lg lg:max-w-xl my-auto p-8 md:p-12 animate-in fade-in slide-in-from-right-8 duration-700">
                     <div className="mb-10 text-left">
                         <h2 className="text-4xl font-black text-white tracking-tight mb-2">Create account</h2>
                         <p className="text-fg-muted font-medium">Join the network of professional developers.</p>

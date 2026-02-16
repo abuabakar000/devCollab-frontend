@@ -101,12 +101,12 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-canvas-subtle border-b border-border-default sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <nav className="bg-canvas-subtle border-b border-border-default sticky top-0 z-50 bg-opacity-90">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center h-[70px]">
                     {/* Logo/Brand */}
-                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden">
-                        <img src={logo} alt="DevCollab" className="h-[160px] w-auto object-contain select-none translate-y-1" style={{ filter: 'brightness(1.2)' }} />
+                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden -ml-2 md:ml-0">
+                        <img src={logo} alt="DevCollab" className="h-[200px] md:h-[160px] w-auto object-contain select-none translate-y-1" style={{ filter: 'brightness(1.2)' }} />
                     </Link>
 
                     {/* Right Section */}
@@ -218,7 +218,7 @@ const Navbar = () => {
                                             </button>
 
                                             {isNotifOpen && (
-                                                <div className="fixed md:absolute left-4 right-4 md:left-auto md:right-0 top-4 md:top-auto md:mt-3 md:w-80 max-h-[70vh] md:max-h-[400px] bg-canvas-subtle border border-border-default rounded-xl shadow-2xl overflow-y-auto z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+                                                <div className="fixed md:absolute left-4 right-4 md:left-auto md:right-0 top-[70px] md:top-auto md:mt-3 md:w-80 max-h-[70vh] md:max-h-[400px] bg-canvas-subtle border border-border-default rounded-xl shadow-2xl overflow-y-auto z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
                                                     <div className="p-4 md:p-3 border-b border-border-muted bg-canvas-default/50 sticky top-0 z-10 flex justify-between items-center">
                                                         <h3 className="text-xs font-black uppercase tracking-widest text-fg-default">Notifications</h3>
                                                         <button
@@ -296,7 +296,7 @@ const Navbar = () => {
                                         </button>
 
                                         {isProfileDropdownOpen && (
-                                            <div className="fixed md:absolute left-4 right-4 md:left-auto md:right-0 top-4 md:top-auto md:mt-3 md:w-56 bg-canvas-subtle border border-border-default rounded-xl shadow-2xl overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+                                            <div className="fixed md:absolute left-4 right-4 md:left-auto md:right-0 top-[70px] md:top-auto md:mt-3 md:w-56 bg-canvas-subtle border border-border-default rounded-xl shadow-2xl overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
                                                 <div className="px-5 py-4 md:px-4 md:py-3 border-b border-border-muted bg-canvas-default/50 flex justify-between items-center">
                                                     <div className="min-w-0">
                                                         <p className="text-sm md:text-xs font-bold text-fg-default truncate">{user.name}</p>
@@ -364,7 +364,7 @@ const Navbar = () => {
                             onClick={() => setIsMobileMenuOpen(false)}
                         ></div>
 
-                        <div className="fixed left-4 right-4 top-4 md:hidden bg-canvas-subtle border border-border-default rounded-2xl shadow-2xl z-[50] overflow-hidden animate-in slide-in-from-top-4 duration-300">
+                        <div className="fixed left-4 right-4 top-[70px] md:hidden bg-canvas-subtle border border-border-default rounded-2xl shadow-2xl z-[50] overflow-hidden animate-in slide-in-from-top-4 duration-300">
                             <div className="p-4 border-b border-border-muted bg-canvas-default/50 flex justify-between items-center">
                                 <h3 className="text-xs font-black uppercase tracking-widest text-fg-default">Navigation</h3>
                                 <button
@@ -381,8 +381,8 @@ const Navbar = () => {
                                     className="flex items-center space-x-4 px-4 py-4 text-fg-muted hover:text-accent hover:bg-canvas-default rounded-xl transition-all group"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    <FaHome size={22} className="group-hover:scale-110 transition-transform" />
-                                    <span className="font-bold text-lg">Home Feed</span>
+                                    <FaHome size={18} className="group-hover:scale-110 transition-transform" />
+                                    <span className="font-semibold text-sm">Home Feed</span>
                                 </Link>
 
                                 {user ? (
@@ -392,24 +392,24 @@ const Navbar = () => {
                                             className="flex items-center space-x-4 px-4 py-4 text-fg-muted hover:text-accent hover:bg-canvas-default rounded-xl transition-all group"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
-                                            <FaPlusCircle size={22} className="group-hover:scale-110 transition-transform" />
-                                            <span className="font-bold text-lg">Create Post</span>
+                                            <FaPlusCircle size={18} className="group-hover:scale-110 transition-transform" />
+                                            <span className="font-semibold text-sm">Create Post</span>
                                         </Link>
                                         <Link
                                             to={`/profile/${user._id}`}
                                             className="flex items-center space-x-4 px-4 py-4 text-fg-muted hover:text-accent hover:bg-canvas-default rounded-xl transition-all group"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
-                                            <FaUser size={22} className="group-hover:scale-110 transition-transform" />
-                                            <span className="font-bold text-lg">My Profile</span>
+                                            <FaUser size={18} className="group-hover:scale-110 transition-transform" />
+                                            <span className="font-semibold text-sm">My Profile</span>
                                         </Link>
                                         <Link
                                             to={`/profile/edit`}
                                             className="flex items-center space-x-4 px-4 py-4 text-fg-muted hover:text-accent hover:bg-canvas-default rounded-xl transition-all group"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
-                                            <FaUserEdit size={22} className="group-hover:scale-110 transition-transform" />
-                                            <span className="font-bold text-lg">Edit Account</span>
+                                            <FaUserEdit size={18} className="group-hover:scale-110 transition-transform" />
+                                            <span className="font-semibold text-sm">Edit Account</span>
                                         </Link>
 
                                         <div className="h-px bg-border-muted my-2 mx-4"></div>
@@ -418,22 +418,22 @@ const Navbar = () => {
                                             onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
                                             className="flex items-center space-x-4 px-4 py-4 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all group text-left"
                                         >
-                                            <FaSignOutAlt size={22} className="group-hover:translate-x-1 transition-transform" />
-                                            <span className="font-bold text-lg">Logout</span>
+                                            <FaSignOutAlt size={18} className="group-hover:translate-x-1 transition-transform" />
+                                            <span className="font-semibold text-sm">Logout</span>
                                         </button>
                                     </>
                                 ) : (
                                     <div className="p-2 space-y-3">
                                         <Link
                                             to="/login"
-                                            className="block text-center text-fg-muted hover:text-fg-default font-bold text-lg py-3 rounded-xl hover:bg-canvas-default transition-all"
+                                            className="block text-center text-fg-muted hover:text-fg-default font-semibold text-sm py-2 rounded-xl hover:bg-canvas-default transition-all"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Login
                                         </Link>
                                         <Link
                                             to="/register"
-                                            className="block text-center bg-accent hover:bg-accent-hover text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all shadow-accent/20"
+                                            className="block text-center bg-accent hover:bg-accent-hover text-white font-semibold text-sm py-3 rounded-xl shadow-lg transition-all shadow-accent/20"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Join Community
