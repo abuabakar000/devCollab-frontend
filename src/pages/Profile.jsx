@@ -132,20 +132,20 @@ const Profile = () => {
 
                         {/* Stats Row for Mobile */}
                         <div className="flex-1 md:hidden">
-                            <div className="flex justify-between items-center text-center">
-                                <div className="flex flex-col min-w-0">
-                                    <span className="font-black text-xl text-fg-default italic font-mono">{posts.length}</span>
-                                    <span className="text-fg-subtle text-[9px] uppercase tracking-widest font-black">Posts</span>
+                            <div className="flex justify-between items-center text-center gap-0">
+                                <div className="flex flex-col min-w-0 flex-1">
+                                    <span className="font-black text-lg text-fg-default italic">{posts.length}</span>
+                                    <span className="text-fg-subtle text-[7px] uppercase tracking-normal font-black">Posts</span>
                                 </div>
-                                <div className="w-px h-8 bg-white/5"></div>
-                                <div className="flex flex-col min-w-0 cursor-pointer" onClick={openFollowersModal}>
-                                    <span className="font-black text-xl text-fg-default italic font-mono">{profileUser.followers?.length || 0}</span>
-                                    <span className="text-fg-subtle text-[9px] uppercase tracking-widest font-black">Followers</span>
+                                <div className="w-px h-5 bg-white/5"></div>
+                                <div className="flex flex-col min-w-0 flex-1 cursor-pointer" onClick={openFollowersModal}>
+                                    <span className="font-black text-lg text-fg-default italic">{profileUser.followers?.length || 0}</span>
+                                    <span className="text-fg-subtle text-[7px] uppercase tracking-normal font-black">Followers</span>
                                 </div>
-                                <div className="w-px h-8 bg-white/5"></div>
-                                <div className="flex flex-col min-w-0 cursor-pointer" onClick={openFollowingModal}>
-                                    <span className="font-black text-xl text-fg-default italic font-mono">{profileUser.following?.length || 0}</span>
-                                    <span className="text-fg-subtle text-[9px] uppercase tracking-widest font-black">Following</span>
+                                <div className="w-px h-5 bg-white/5"></div>
+                                <div className="flex flex-col min-w-0 flex-1 cursor-pointer" onClick={openFollowingModal}>
+                                    <span className="font-black text-lg text-fg-default italic">{profileUser.following?.length || 0}</span>
+                                    <span className="text-fg-subtle text-[7px] uppercase tracking-normal font-black">Following</span>
                                 </div>
                             </div>
                         </div>
@@ -154,31 +154,31 @@ const Profile = () => {
                     <div className="flex-1 text-left relative z-10">
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
                             <div>
-                                <h1 className="text-3xl md:text-5xl font-black text-fg-default italic uppercase tracking-tight">
+                                <h1 className="text-2xl md:text-5xl font-black text-fg-default italic uppercase tracking-tight">
                                     {profileUser.name}
                                 </h1>
-                                <p className="text-accent font-bold text-xs md:text-sm tracking-widest opacity-80 mb-6 uppercase">
+                                <p className="text-accent font-bold text-[10px] md:text-sm tracking-widest opacity-80 mb-6 uppercase">
                                     {profileUser.email}
                                 </p>
 
                                 {/* Stats for Desktop */}
                                 <div className="hidden md:flex gap-10 text-sm">
                                     <div className="flex gap-2 items-baseline group/stat">
-                                        <span className="font-black text-2xl text-fg-default italic font-mono group-hover/stat:text-accent transition-colors">{posts.length}</span>
+                                        <span className="font-black text-2xl text-fg-default italic group-hover/stat:text-accent transition-colors">{posts.length}</span>
                                         <span className="text-fg-subtle text-[10px] uppercase tracking-[0.2em] font-black">Posts</span>
                                     </div>
                                     <div
                                         className="flex gap-2 items-baseline cursor-pointer group/stat"
                                         onClick={openFollowersModal}
                                     >
-                                        <span className="font-black text-2xl text-fg-default italic font-mono group-hover/stat:text-accent transition-colors">{profileUser.followers?.length || 0}</span>
+                                        <span className="font-black text-2xl text-fg-default italic group-hover/stat:text-accent transition-colors">{profileUser.followers?.length || 0}</span>
                                         <span className="text-fg-subtle text-[10px] uppercase tracking-[0.2em] font-black">Followers</span>
                                     </div>
                                     <div
                                         className="flex gap-2 items-baseline cursor-pointer group/stat"
                                         onClick={openFollowingModal}
                                     >
-                                        <span className="font-black text-2xl text-fg-default italic font-mono group-hover/stat:text-accent transition-colors">{profileUser.following?.length || 0}</span>
+                                        <span className="font-black text-2xl text-fg-default italic group-hover/stat:text-accent transition-colors">{profileUser.following?.length || 0}</span>
                                         <span className="text-fg-subtle text-[10px] uppercase tracking-[0.2em] font-black">Following</span>
                                     </div>
                                 </div>
@@ -228,20 +228,20 @@ const Profile = () => {
                             </div>
                         )}
 
-                        <div className="flex gap-8 border-t border-white/[0.03] pt-8 overflow-x-auto no-scrollbar">
+                        <div className="flex flex-wrap gap-y-4 gap-x-4 md:gap-8 border-t border-white/[0.03] pt-8">
                             {profileUser.linkedinLink && (
-                                <a href={profileUser.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-fg-subtle hover:text-accent transition-all duration-300 text-xs font-black uppercase tracking-widest group/link shrink-0">
-                                    <FaLinkedin size={20} className="text-fg-default group-hover/link:text-accent transition-colors" /> LinkedIn
+                                <a href={profileUser.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-subtle hover:text-accent transition-all duration-300 text-[10px] md:text-xs font-black uppercase tracking-widest group/link shrink-0">
+                                    <FaLinkedin size={14} className="text-fg-default group-hover/link:text-accent transition-colors md:w-5 md:h-5" /> LinkedIn
                                 </a>
                             )}
                             {profileUser.githubLink && (
-                                <a href={profileUser.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-fg-subtle hover:text-accent transition-all duration-300 text-xs font-black uppercase tracking-widest group/link shrink-0">
-                                    <FaGithub size={20} className="text-fg-default group-hover/link:text-accent transition-colors" /> GitHub
+                                <a href={profileUser.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-subtle hover:text-accent transition-all duration-300 text-[10px] md:text-xs font-black uppercase tracking-widest group/link shrink-0">
+                                    <FaGithub size={14} className="text-fg-default group-hover/link:text-accent transition-colors md:w-5 md:h-5" /> GitHub
                                 </a>
                             )}
                             {profileUser.portfolioLink && (
-                                <a href={profileUser.portfolioLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-fg-subtle hover:text-accent transition-all duration-300 text-xs font-black uppercase tracking-widest group/link shrink-0">
-                                    <FaLink size={18} className="text-fg-default group-hover/link:text-accent transition-colors" /> Portfolio
+                                <a href={profileUser.portfolioLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-fg-subtle hover:text-accent transition-all duration-300 text-[10px] md:text-xs font-black uppercase tracking-widest group/link shrink-0">
+                                    <FaLink size={12} className="text-fg-default group-hover/link:text-accent transition-colors md:w-4.5 md:h-4.5" /> Portfolio
                                 </a>
                             )}
                         </div>
