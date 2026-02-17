@@ -32,13 +32,8 @@ const ChatBox = () => {
     // Fetch Conversations users have had
     const fetchConversations = async () => {
         try {
-            console.log("Fetching conversations...");
             const { data } = await api.get("/messages/conversations");
-            const users = await Promise.all(data.map(async (id) => {
-                const res = await api.get(`/users/${id}`);
-                return res.data;
-            }));
-            setConversations(users);
+            setConversations(data);
         } catch (err) {
             console.error("Fetch conversations failed:", err);
         }
@@ -136,14 +131,18 @@ const ChatBox = () => {
 
         try {
             const { data } = await api.post("/messages", messageData);
-            // Server will trigger Pusher event for the receiver
             setMessages((prev) => [...prev, data]);
             setInputText("");
-            // Refresh conversations list to update preview of the chat we just sent to
             fetchConversations();
         } catch (err) {
             console.error(err);
         }
+    };
+
+    const isUserOnline = (lastActive) => {
+        if (!lastActive) return false;
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        return new Date(lastActive) >= fiveMinutesAgo;
     };
 
     if (!user) return null;
@@ -166,7 +165,7 @@ const ChatBox = () => {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="relative z-[100] mb-3 w-[calc(100vw-32px)] sm:w-[350px] md:w-[400px] h-[75vh] md:h-[550px] bg-canvas-subtle border border-border-default rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
+                <div className="relative z-[100] mb-3 w-[calc(100vw-32px)] sm:w-[350px] md:w-[400px] h-[75vh] md:h-[500px] md:max-h-[70vh] bg-canvas-subtle border border-border-default rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
 
                     {/* Header */}
                     <div className="p-4 bg-canvas-default border-b border-border-default flex justify-between items-center bg-gradient-to-r from-accent/10 to-transparent">
@@ -184,11 +183,13 @@ const ChatBox = () => {
                                                 <FaUser size={14} />
                                             </div>
                                         )}
-                                        <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-canvas-subtle rounded-full shadow-sm"></div>
+                                        <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 border-2 border-canvas-subtle rounded-full shadow-sm ${isUserOnline(activeChat.lastActive) ? "bg-green-500" : "bg-fg-muted/30"}`}></div>
                                     </div>
                                     <div className="min-w-0">
                                         <h4 className="text-sm md:text-base font-bold text-fg-default truncate max-w-[120px] md:max-w-[180px]">{activeChat.name}</h4>
-                                        <p className="text-[10px] text-green-500 font-bold uppercase tracking-tighter">Active Now</p>
+                                        <p className={`text-[10px] font-bold uppercase tracking-tighter ${isUserOnline(activeChat.lastActive) ? "text-green-500" : "text-fg-muted"}`}>
+                                            {isUserOnline(activeChat.lastActive) ? "Active Now" : "Offline"}
+                                        </p>
                                     </div>
                                 </>
                             ) : (
@@ -232,7 +233,7 @@ const ChatBox = () => {
                                                         <FaUser size={18} />
                                                     </div>
                                                 )}
-                                                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-canvas-subtle rounded-full"></div>
+                                                <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 border-2 border-canvas-subtle rounded-full ${isUserOnline(c.lastActive) ? "bg-green-500" : "bg-fg-muted/30"}`}></div>
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <h5 className="text-sm font-bold text-fg-default group-hover:text-accent truncate transition-colors">{c.name}</h5>

@@ -101,12 +101,17 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-canvas-subtle border-b border-border-default sticky top-0 z-50 bg-opacity-90">
-            <div className="container mx-auto px-4">
+        <nav className="glass-header border-b border-white/[0.03]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-[70px]">
                     {/* Logo/Brand */}
-                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden shrink-0 -ml-2 md:ml-0">
-                        <img src={logo} alt="DevCollab" className="h-[110px] md:h-[130px] w-auto object-contain select-none translate-y-1.5" style={{ filter: 'brightness(1.2)' }} />
+                    <Link to="/" className="flex items-center transition hover:opacity-80 h-full overflow-hidden shrink-0 -ml-2 md:ml-0 group">
+                        <img
+                            src={logo}
+                            alt="DevCollab"
+                            className="h-[110px] md:h-[130px] w-auto object-contain select-none translate-y-2 group-hover:scale-105 transition-transform duration-500"
+                            style={{ filter: 'brightness(1.5) drop-shadow(0 0 15px rgba(99, 102, 241, 0.3))' }}
+                        />
                     </Link>
 
                     {/* Right Section */}
@@ -173,15 +178,15 @@ const Navbar = () => {
                         ) : (
                             /* Regular Pages: Full Menu */
                             <>
-                                <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-                                    <Link to="/" className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 cursor-pointer hover:scale-110">
-                                        <FaHome className="text-lg" />
+                                <div className="hidden md:flex items-center space-x-8">
+                                    <Link to="/" className="flex items-center space-x-2 text-sm font-bold text-fg-muted hover:text-accent transition-all duration-300 cursor-pointer group">
+                                        <FaHome className="text-xl group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform" />
                                         <span>Home</span>
                                     </Link>
 
                                     {user && (
-                                        <Link to="/create-post" className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 cursor-pointer hover:scale-110">
-                                            <FaPlusCircle className="text-lg" />
+                                        <Link to="/create-post" className="flex items-center space-x-2 text-sm font-bold text-fg-muted hover:text-accent transition-all duration-300 cursor-pointer group">
+                                            <FaPlusCircle className="text-xl group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform" />
                                             <span>Post</span>
                                         </Link>
                                     )}
@@ -195,10 +200,12 @@ const Navbar = () => {
                                                 const chatEvent = new CustomEvent('toggle-chat');
                                                 window.dispatchEvent(chatEvent);
                                             }}
-                                            className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110 shrink-0"
+                                            className="flex items-center space-x-2 text-sm font-bold text-fg-muted hover:text-accent transition-all duration-300 focus:outline-none cursor-pointer group shrink-0"
                                             title="Messages"
                                         >
-                                            <IoChatbubbleEllipsesSharp className="text-xl md:text-lg" />
+                                            <div className="relative">
+                                                <IoChatbubbleEllipsesSharp className="text-2xl md:text-xl group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform" />
+                                            </div>
                                             <span className="hidden md:inline">Inbox</span>
                                         </button>
 
@@ -206,15 +213,17 @@ const Navbar = () => {
                                         <div className="relative shrink-0" ref={notifRef}>
                                             <button
                                                 onClick={handleMarkAsRead}
-                                                className="flex items-center space-x-2 text-sm font-semibold text-fg-muted hover:text-accent transition-all duration-200 focus:outline-none cursor-pointer hover:scale-110"
+                                                className="flex items-center space-x-2 text-sm font-bold text-fg-muted hover:text-accent transition-all duration-300 focus:outline-none cursor-pointer group"
                                             >
-                                                <FaBell className="text-xl md:text-lg" />
+                                                <div className="relative">
+                                                    <FaBell className="text-2xl md:text-xl group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform" />
+                                                    {unreadCount > 0 && (
+                                                        <span className="absolute -top-1 -right-1 bg-accent text-white text-[9px] font-black min-w-[15px] h-3.5 px-1 flex items-center justify-center rounded-full border border-canvas-default shadow-lg shadow-accent/40 animate-pulse">
+                                                            {unreadCount}
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <span className="hidden md:inline">Notifications</span>
-                                                {unreadCount > 0 && (
-                                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full border-2 border-canvas-subtle animate-bounce">
-                                                        {unreadCount}
-                                                    </span>
-                                                )}
                                             </button>
 
                                             {isNotifOpen && (

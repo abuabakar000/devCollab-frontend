@@ -167,45 +167,49 @@ const OnboardingProfilePic = () => {
             {/* Cropper Modal */}
             {showCropper && (
                 <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-4">
-                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-y-auto max-h-[calc(100vh-40px)] scrollbar-thin shadow-2xl border border-border-default">
-                        <div className="p-5 md:p-6 border-b border-border-default flex justify-between items-center sticky top-0 bg-canvas-subtle z-10">
+                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-hidden shadow-2xl border border-border-default flex flex-col max-h-[calc(100vh-40px)]">
+                        <div className="p-5 md:p-6 border-b border-border-default flex justify-between items-center bg-canvas-subtle z-10 shrink-0">
                             <h3 className="text-xl font-black text-fg-default">Adjust Your Photo</h3>
                             <button onClick={() => setShowCropper(false)} className="p-2 hover:bg-canvas-default rounded-full text-fg-muted transition">
                                 <FaTimes />
                             </button>
                         </div>
 
-                        <div className="relative h-[300px] md:h-[400px] w-full bg-black">
-                            <Cropper
-                                image={image}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onCropComplete={onCropComplete}
-                                onZoomChange={setZoom}
-                                cropShape="round"
-                                showGrid={false}
-                            />
-                        </div>
-
-                        <div className="p-6 md:p-8 space-y-6">
-                            <div className="space-y-4">
-                                <div className="flex justify-between text-xs font-black text-fg-muted uppercase tracking-widest">
-                                    <span>Zoom</span>
-                                    <span>{Math.round(zoom * 100)}%</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    value={zoom}
-                                    min={1}
-                                    max={3}
-                                    step={0.1}
-                                    onChange={(e) => setZoom(e.target.value)}
-                                    className="w-full h-2 bg-canvas-default rounded-lg appearance-none cursor-pointer accent-accent"
+                        <div className="flex-1 overflow-y-auto scrollbar-thin">
+                            <div className="relative h-[300px] md:h-[400px] w-full bg-black">
+                                <Cropper
+                                    image={image}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    aspect={1}
+                                    onCropChange={setCrop}
+                                    onCropComplete={onCropComplete}
+                                    onZoomChange={setZoom}
+                                    cropShape="round"
+                                    showGrid={false}
                                 />
                             </div>
 
+                            <div className="p-6 md:p-8">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between text-xs font-black text-fg-muted uppercase tracking-widest">
+                                        <span>Zoom</span>
+                                        <span>{Math.round(zoom * 100)}%</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        value={zoom}
+                                        min={1}
+                                        max={3}
+                                        step={0.1}
+                                        onChange={(e) => setZoom(e.target.value)}
+                                        className="w-full h-2 bg-canvas-default rounded-lg appearance-none cursor-pointer accent-accent"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-6 md:p-8 border-t border-border-default bg-canvas-subtle/80 backdrop-blur-md shrink-0">
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowCropper(false)}

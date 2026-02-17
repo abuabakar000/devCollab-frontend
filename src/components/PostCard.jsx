@@ -28,84 +28,96 @@ const PostCard = ({ post }) => {
     };
 
     return (
-        <div className="bg-canvas-subtle rounded-3xl shadow-lg mb-4 md:mb-8 overflow-hidden border border-border-default hover:border-accent/30 transition-all duration-300 group">
-            <Link to={`/posts/${post._id}`} className="block overflow-hidden">
+        <div className="glass-card rounded-[2rem] mb-6 md:mb-10 overflow-hidden neon-border group/card">
+            <Link to={`/posts/${post._id}`} className="block overflow-hidden relative aspect-[16/9] md:aspect-[21/9]">
                 {(post.images && post.images.length > 0) ? (
                     <img
                         src={getOptimizedUrl(post.images[0])}
                         alt={post.title}
-                        className="w-full aspect-[16/10] md:h-72 object-cover border-b border-border-muted group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-1000"
                     />
                 ) : post.image ? (
                     <img
                         src={getOptimizedUrl(post.image)}
                         alt={post.title}
-                        className="w-full aspect-[16/10] md:h-72 object-cover border-b border-border-muted group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-1000"
                     />
-                ) : null}
+                ) : (
+                    <div className="w-full h-full bg-canvas-inset flex items-center justify-center">
+                        <FaCode size={48} className="text-white/5" />
+                    </div>
+                )}
+                {/* Image Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-canvas-subtle/80 via-transparent to-transparent opacity-60"></div>
             </Link>
-            <div className="p-4 md:p-8">
-                <div className="flex items-center mb-4 md:mb-6">
+
+            <div className="p-5 md:p-8">
+                <div className="flex items-center justify-between mb-6">
                     {post?.user && (
                         <Link to={`/profile/${post.user._id}`} className="flex items-center group/user">
-                            {post.user.profilePic ? (
-                                <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-8 h-8 md:w-12 md:h-12 rounded-xl mr-3 object-cover border border-border-default group-hover/user:border-accent transition-colors" />
-                            ) : (
-                                <div className="w-8 h-8 md:w-12 md:h-12 rounded-xl bg-canvas-default border border-border-muted flex items-center justify-center mr-3 group-hover/user:border-accent transition-colors">
-                                    <FaUser className="text-fg-muted size-3 md:size-5" />
-                                </div>
-                            )}
-                            <div>
-                                <h3 className="font-bold text-sm md:text-lg text-fg-default group-hover/user:text-accent transition">{post.user.name}</h3>
-                                <p className="text-fg-muted text-[10px] md:text-xs uppercase tracking-widest font-black opacity-60">
-                                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Recent'}
+                            <div className="relative">
+                                {post.user.profilePic ? (
+                                    <img src={getOptimizedUrl(post.user.profilePic)} alt={post.user.name} className="w-10 h-10 md:w-12 md:h-12 rounded-2xl mr-4 object-cover border border-white/5 group-hover/user:border-accent transition-colors shadow-lg" />
+                                ) : (
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-canvas-inset border border-white/5 flex items-center justify-center mr-4 group-hover/user:border-accent transition-colors">
+                                        <FaUser className="text-fg-subtle size-4" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="min-w-0">
+                                <h3 className="font-bold text-sm md:text-base text-fg-default group-hover/user:text-accent transition truncate">{post.user.name}</h3>
+                                <p className="text-fg-subtle text-[10px] md:text-xs font-medium">
+                                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Recent'}
                                 </p>
                             </div>
                         </Link>
                     )}
-                </div>
-
-                <Link to={`/posts/${post._id}`} className="block mb-4">
-                    <h2 className="text-lg md:text-2xl font-black text-fg-default mb-2 group-hover:text-accent transition uppercase tracking-tight">{post.title}</h2>
-                    <p className="text-fg-muted whitespace-pre-line text-xs md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 opacity-90">{post.text}</p>
-                </Link>
-
-                {post.techStack && post.techStack.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6">
-                        {post.techStack.map((tech, index) => (
-                            <span key={index} className="bg-canvas-default text-accent text-[10px] md:text-xs px-2.5 py-1 rounded-lg border border-border-muted font-mono font-bold shadow-sm">
-                                {tech}
-                            </span>
-                        ))}
-                    </div>
-                )}
-
-                <div className="flex items-center justify-between border-t border-border-muted pt-4 md:pt-6 mt-2">
-                    <div className="flex space-x-6">
-                        <button
-                            onClick={handleLike}
-                            className={`flex items-center space-x-2 ${isLiked ? "text-red-500" : "text-fg-muted hover:text-red-500"} transition text-xs md:text-sm font-bold uppercase tracking-wider`}
-                        >
-                            <FaHeart size={16} className={isLiked ? "animate-jump" : ""} />
-                            <span>{likes}</span>
-                        </button>
-                        <Link to={`/posts/${post?._id}`} className="flex items-center space-x-2 text-fg-muted hover:text-accent transition text-xs md:text-sm font-bold uppercase tracking-wider">
-                            <FaComment size={16} />
-                            <span>{post?.comments?.length || 0}</span>
-                        </Link>
-                    </div>
 
                     {post.githubRepoLink && (
                         <a
                             href={post.githubRepoLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center space-x-2 text-fg-muted hover:text-fg-default transition text-xs md:text-sm font-black uppercase tracking-widest bg-canvas-default px-3 py-1.5 rounded-lg border border-border-muted shadow-sm"
+                            className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 text-fg-muted hover:text-fg-default transition-all duration-300"
+                            title="View Source"
                         >
-                            <FaGithub size={16} />
-                            <span className="hidden xs:inline">Source</span>
+                            <FaGithub size={18} />
                         </a>
                     )}
+                </div>
+
+                <Link to={`/posts/${post._id}`} className="block mb-6 group/title">
+                    <h2 className="text-xl md:text-3xl font-black text-fg-default mb-3 group-hover/title:text-accent transition-colors tracking-tight leading-tight uppercase italic">
+                        {post.title}
+                    </h2>
+                    <p className="text-fg-muted text-sm md:text-lg leading-relaxed line-clamp-2 opacity-80 font-medium">
+                        {post.text}
+                    </p>
+                </Link>
+
+                <div className="flex flex-wrap gap-2.5 mb-8">
+                    {post.techStack && post.techStack.map((tech, index) => (
+                        <span key={index} className="bg-accent/5 text-accent text-[10px] md:text-xs px-3.5 py-1.5 rounded-full border border-accent/10 font-bold tracking-wider uppercase hover:bg-accent/10 transition-colors">
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+
+                <div className="flex items-center space-x-6 pt-6 border-t border-white/[0.03]">
+                    <button
+                        onClick={handleLike}
+                        className={`flex items-center space-x-2.5 py-2 px-4 rounded-xl transition-all duration-300 ${isLiked ? "bg-red-500/10 text-red-500" : "bg-white/5 text-fg-muted hover:bg-red-500/5 hover:text-red-500"}`}
+                    >
+                        <FaHeart size={18} className={isLiked ? "animate-bounce" : ""} />
+                        <span className="text-sm font-black italic">{likes}</span>
+                    </button>
+                    <Link
+                        to={`/posts/${post?._id}`}
+                        className="flex items-center space-x-2.5 py-2 px-4 rounded-xl bg-white/5 text-fg-muted hover:bg-accent/5 hover:text-accent transition-all duration-300"
+                    >
+                        <FaComment size={18} />
+                        <span className="text-sm font-black italic">{post?.comments?.length || 0}</span>
+                    </Link>
                 </div>
             </div>
         </div>

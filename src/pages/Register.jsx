@@ -78,10 +78,10 @@ const Register = () => {
                     <img src={logoMobile} alt="DevCollab" className="h-14 w-auto" />
                 </div>
 
-                <div className="w-full max-w-md md:max-w-lg lg:max-w-xl my-auto p-8 md:p-12 animate-in fade-in slide-in-from-right-8 duration-700">
-                    <div className="mb-10 text-left">
-                        <h2 className="text-4xl font-black text-white tracking-tight mb-2">Create account</h2>
-                        <p className="text-fg-muted font-medium">Join the network of professional developers.</p>
+                <div className="w-full max-w-md md:max-w-lg lg:max-w-xl my-auto p-8 md:p-14 animate-in fade-in slide-in-from-right-8 duration-700">
+                    <div className="mb-12 text-left">
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 italic uppercase">Initialize <span className="text-accent">Access</span></h2>
+                        <p className="text-fg-subtle font-medium italic opacity-60">Join the elite network of professional innovators.</p>
                     </div>
 
                     {error && (
@@ -145,9 +145,9 @@ const Register = () => {
                         </div>
                     </form>
 
-                    <div className="mt-12 pt-8 border-t border-border-muted text-center lg:text-left">
-                        <p className="text-fg-muted font-medium">
-                            Already have an account? <Link to="/login" className="text-accent font-black hover:text-accent-hover transition-colors ml-1">Sign in here</Link>
+                    <div className="mt-16 pt-10 border-t border-white/5 text-center lg:text-left">
+                        <p className="text-fg-subtle font-medium italic opacity-60">
+                            Already synchronized? <Link to="/login" className="text-accent font-black hover:text-accent-hover transition-colors ml-2 italic uppercase tracking-widest text-xs">Authorize Identity</Link>
                         </p>
                     </div>
                 </div>

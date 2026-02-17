@@ -48,109 +48,103 @@ const CreatePost = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto px-4 py-6 md:py-12">
-            <div className="bg-canvas-subtle p-6 md:p-10 rounded-2xl shadow-xl border border-border-default">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-fg-default mb-2 tracking-tight">Share Your Project</h1>
-                <p className="text-fg-muted mb-8 text-xs md:text-sm font-medium">Let others see what you've been working on</p>
+        <div className="max-w-3xl mx-auto px-4 py-12 md:py-20 animate-in fade-in duration-700">
+            <div className="glass-card p-8 md:p-14 rounded-[2.5rem] shadow-3xl border-white/5 relative overflow-hidden group">
+                {/* Visual Accent */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/40 to-transparent"></div>
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent blur-[100px] opacity-10"></div>
+
+                <div className="relative z-10 mb-12">
+                    <h1 className="text-3xl md:text-5xl font-black text-fg-default mb-4 tracking-tighter italic uppercase">
+                        Broadcast <span className="text-accent">Innovation</span>
+                    </h1>
+                    <p className="text-fg-subtle text-sm md:text-base font-medium opacity-60 italic">
+                        Deploy your breakthrough to the global collective.
+                    </p>
+                </div>
 
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm mb-6 font-medium animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest mb-10 animate-in slide-in-from-top-4 duration-500 flex items-center gap-4">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-                    <div className="group">
-                        <label className="block text-[10px] md:text-xs font-black text-fg-muted uppercase tracking-widest mb-2.5 ml-1 transition-colors group-focus-within:text-accent">Project Title</label>
+                <form onSubmit={handleSubmit} className="space-y-10 md:space-y-12">
+                    <div className="group/field relative">
+                        <label className="block text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 group-focus-within/field:text-accent transition-colors">Project Identity</label>
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full bg-canvas-default text-fg-default rounded-xl px-4 py-3.5 md:py-3 border border-border-default focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-base md:text-sm"
+                            className="w-full bg-white/[0.03] text-fg-default rounded-2xl px-6 py-4 border border-white/5 focus:border-accent/40 focus:ring-4 focus:ring-accent/5 outline-none transition-all duration-500 placeholder:text-white/10 text-lg font-bold italic"
                             required
-                            placeholder="e.g., AI Code Assistant"
+                            placeholder="e.g., NEURAL INTERFACE v1.0"
                         />
                     </div>
 
-                    <div className="group">
-                        <label className="block text-[10px] md:text-xs font-black text-fg-muted uppercase tracking-widest mb-2.5 ml-1 transition-colors group-focus-within:text-accent">Description</label>
+                    <div className="group/field relative">
+                        <label className="block text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 group-focus-within/field:text-accent transition-colors">Documentation</label>
                         <textarea
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            className="w-full bg-canvas-default text-fg-default rounded-xl px-4 py-4 h-48 border border-border-default focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 resize-none leading-relaxed text-base md:text-sm"
+                            className="w-full bg-white/[0.03] text-fg-default rounded-[1.5rem] px-6 py-6 h-56 border border-white/5 focus:border-accent/40 focus:ring-4 focus:ring-accent/5 outline-none transition-all duration-500 placeholder:text-white/10 resize-none leading-relaxed text-sm font-medium italic"
                             required
-                            placeholder="What makes this project special? List key features and technologies used..."
+                            placeholder="Detail the technical breakthrough, architecture, and vision..."
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                        <div className="group">
-                            <label className="block text-[10px] md:text-xs font-black text-fg-muted uppercase tracking-widest mb-2.5 ml-1 transition-colors group-focus-within:text-accent">Tech Stack</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                        <div className="group/field relative">
+                            <label className="block text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 group-focus-within/field:text-accent transition-colors">Tech Stack</label>
                             <input
                                 type="text"
                                 value={techStack}
                                 onChange={(e) => setTechStack(e.target.value)}
-                                className="w-full bg-canvas-default text-fg-default rounded-xl px-4 py-3.5 md:py-3 border border-border-default focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-base md:text-sm"
-                                placeholder="React, Tailwind, Node.js"
+                                className="w-full bg-white/[0.03] text-fg-default rounded-2xl px-6 py-4 border border-white/5 focus:border-accent/40 focus:ring-4 focus:ring-accent/5 outline-none transition-all duration-500 placeholder:text-white/10 text-xs font-black uppercase tracking-widest"
+                                placeholder="REACT, TAILWIND, NODE.JS"
                             />
                         </div>
 
-                        <div className="group">
-                            <label className="block text-[10px] md:text-xs font-black text-fg-muted uppercase tracking-widest mb-2.5 ml-1 transition-colors group-focus-within:text-accent">GitHub Repository</label>
+                        <div className="group/field relative">
+                            <label className="block text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 group-focus-within/field:text-accent transition-colors">Github Matrix</label>
                             <input
                                 type="url"
                                 value={githubRepoLink}
                                 onChange={(e) => setGithubRepoLink(e.target.value)}
-                                className="w-full bg-canvas-default text-fg-default rounded-xl px-4 py-3.5 md:py-3 border border-border-default focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all duration-300 placeholder-fg-muted/20 text-base md:text-sm"
+                                className="w-full bg-white/[0.03] text-fg-default rounded-2xl px-6 py-4 border border-white/5 focus:border-accent/40 focus:ring-4 focus:ring-accent/5 outline-none transition-all duration-500 placeholder:text-white/10 text-xs font-bold"
                                 placeholder="https://github.com/..."
                             />
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-[10px] md:text-xs font-black text-fg-muted uppercase tracking-widest mb-2.5 ml-1">Project Screenshots (Optional)</label>
-                        <div className="mt-1 flex justify-center px-6 pt-8 pb-8 border-2 border-border-muted border-dashed rounded-2xl bg-canvas-default/50 hover:bg-canvas-default hover:border-accent/40 transition-all duration-300 cursor-pointer relative group">
-                            <div className="space-y-3 text-center">
-                                <div className="mx-auto h-12 w-12 text-fg-muted group-hover:text-accent group-hover:scale-110 transition-all duration-300">
-                                    <svg
-                                        className="h-full w-full"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        viewBox="0 0 48 48"
-                                        aria-hidden="true"
-                                    >
-                                        <path
-                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                            strokeWidth={2}
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
+                    <div className="group/upload">
+                        <label className="block text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1">Visual Evidence</label>
+                        <div className="mt-1 flex justify-center px-8 pt-12 pb-12 border-2 border-white/5 border-dashed rounded-[2rem] bg-white/[0.02] hover:bg-white/[0.04] hover:border-accent/30 transition-all duration-500 cursor-pointer relative group/drop overflow-hidden">
+                            <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover/drop:opacity-100 transition-opacity"></div>
+                            <div className="space-y-6 text-center relative z-10">
+                                <div className="mx-auto h-16 w-16 text-fg-subtle/20 group-hover/drop:text-accent group-hover/drop:scale-110 transition-all duration-500">
+                                    <svg className="h-full w-full" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
-                                <div className="flex flex-col md:flex-row items-center justify-center text-sm">
-                                    <label
-                                        htmlFor="file-upload"
-                                        className="relative cursor-pointer rounded-lg font-black text-accent hover:text-accent-hover focus-within:outline-none px-2 py-1 bg-accent/5 hover:bg-accent/10 transition-all"
-                                    >
-                                        <span>Click to upload</span>
-                                        <input
-                                            id="file-upload"
-                                            name="file-upload"
-                                            type="file"
-                                            className="sr-only"
-                                            multiple
-                                            onChange={(e) => setImages(Array.from(e.target.files))}
-                                        />
+                                <div className="flex flex-col items-center justify-center">
+                                    <label htmlFor="file-upload" className="relative cursor-pointer rounded-xl font-black text-[10px] uppercase tracking-[0.2em] text-accent px-6 py-3 bg-accent/5 hover:bg-accent/15 transition-all outline-none">
+                                        <span>Initialize Upload</span>
+                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple onChange={(e) => setImages(Array.from(e.target.files))} />
                                     </label>
-                                    <p className="hidden md:block pl-1 text-fg-muted">or drag/drop</p>
+                                    <p className="mt-4 text-[10px] font-bold text-fg-subtle uppercase tracking-widest opacity-40 italic">Drag & Drop visual data</p>
                                 </div>
-                                <p className="text-[10px] md:text-xs text-fg-muted font-medium opacity-60">PNG, JPG, GIF up to 5 files</p>
+                                <p className="text-[9px] text-fg-subtle/30 font-black uppercase tracking-[0.2em]">MAX 5 FILES • PNG, JPG, GIF</p>
 
                                 {images.length > 0 && (
-                                    <div className="mt-4 p-3 bg-canvas-subtle rounded-xl border border-border-muted/30 animate-in zoom-in-95 duration-200">
-                                        <p className="text-[11px] text-accent font-black uppercase tracking-widest mb-1">{images.length} Files Ready</p>
-                                        <p className="text-[10px] text-fg-muted truncate max-w-[200px] mx-auto opacity-70">
-                                            {images.map(img => img.name).join(", ")}
+                                    <div className="mt-6 p-4 glass-card rounded-2xl border-accent/20 animate-in zoom-in-95 duration-500 shadow-2xl">
+                                        <div className="flex items-center justify-center gap-3 mb-2">
+                                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse"></div>
+                                            <p className="text-[10px] text-accent font-black uppercase tracking-[0.2em]">{images.length} Units Ready</p>
+                                        </div>
+                                        <p className="text-[9px] text-fg-subtle/50 truncate max-w-[250px] mx-auto font-mono">
+                                            {images.map(img => img.name.toUpperCase()).join(" || ")}
                                         </p>
                                     </div>
                                 )}
@@ -158,20 +152,19 @@ const CreatePost = () => {
                         </div>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-8">
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`btn-primary w-full shadow-2xl shadow-accent/20 ${loading ? 'py-2' : 'py-4 md:py-5'} rounded-xl transition-all active:scale-95 disabled:grayscale`}
+                            className={`w-full shadow-3xl shadow-accent/20 ${loading ? 'py-4' : 'py-6 md:py-7'} rounded-[1.5rem] bg-accent hover:bg-accent-hover text-white transition-all duration-500 active:scale-95 disabled:grayscale disabled:opacity-40 group/submit relative overflow-hidden`}
                         >
-                            {loading ? <Loader size="sm" text="Broadcasting Project..." /> : <span className="text-base font-black uppercase tracking-[0.2em]">Publish Project</span>}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/submit:translate-x-full transition-transform duration-1000"></div>
+                            {loading ? <Loader size="sm" text="COMMENCING BROADCAST..." /> : <span className="text-sm font-black uppercase tracking-[0.4em] italic font-mono">Publish to Matrix</span>}
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
-
     );
 };
 

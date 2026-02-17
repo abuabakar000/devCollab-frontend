@@ -94,142 +94,160 @@ const EditProfile = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto py-10 px-4">
-            <div className="bg-canvas-subtle p-8 rounded-3xl border border-border-default shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-accent via-purple-500 to-pink-500 animate-gradient"></div>
+        <div className="max-w-3xl mx-auto py-12 md:py-20 px-4 animate-in fade-in duration-700">
+            <div className="glass-card p-8 md:p-14 rounded-[2.5rem] border-white/5 shadow-3xl relative overflow-hidden group">
+                {/* Visual Accent */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/40 to-transparent"></div>
+                <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent blur-[100px] opacity-10"></div>
 
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-black text-fg-default tracking-tight">Edit Profile</h2>
-                    <button onClick={() => navigate(-1)} className="p-2 hover:bg-canvas-default rounded-full text-fg-muted transition">
-                        <FaTimes size={20} />
+                <div className="flex items-center justify-between mb-12 relative z-10">
+                    <div>
+                        <h2 className="text-3xl md:text-5xl font-black text-fg-default tracking-tighter italic font-mono uppercase">
+                            Refine <span className="text-accent">Identity</span>
+                        </h2>
+                        <p className="text-fg-subtle text-sm font-medium opacity-60 mt-2 italic">Adjust your presence in the matrix.</p>
+                    </div>
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-4 bg-white/5 hover:bg-accent text-fg-subtle hover:text-white rounded-2xl transition-all duration-300 border border-white/5 group/close"
+                    >
+                        <FaTimes size={18} className="group-hover/close:rotate-90 transition-transform" />
                     </button>
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-sm font-medium animate-shake">
+                    <div className="mb-10 p-5 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl text-xs font-black uppercase tracking-widest animate-in slide-in-from-top-4 duration-500 flex items-center gap-4">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form onSubmit={handleSubmit} className="space-y-12">
                     {/* Profile Picture Upload */}
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="relative group cursor-pointer" onClick={() => document.getElementById("profilePicInput").click()}>
+                    <div className="flex flex-col items-center gap-6 relative z-10 group/avatar">
+                        <div className="relative cursor-pointer" onClick={() => document.getElementById("profilePicInput").click()}>
+                            <div className="absolute inset-0 bg-accent blur-2xl opacity-20 group-hover/avatar:opacity-40 transition-opacity"></div>
                             {preview ? (
-                                <img src={preview} alt="Preview" className="w-32 h-32 rounded-full object-cover border-4 border-accent shadow-xl group-hover:opacity-75 transition-all" />
+                                <img src={preview} alt="Preview" className="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] object-cover border border-white/10 shadow-3xl relative z-10 transition-transform duration-500 group-hover/avatar:scale-105" />
                             ) : (
-                                <div className="w-32 h-32 rounded-full bg-canvas-default border-4 border-border-default flex items-center justify-center text-fg-muted group-hover:border-accent transition-all">
-                                    <FaUser size={48} />
+                                <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex items-center justify-center text-fg-subtle relative z-10 group-hover/avatar:border-accent/40 transition-all duration-500">
+                                    <FaUser size={48} className="opacity-20" />
                                 </div>
                             )}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <FaCamera className="text-white text-3xl drop-shadow-lg" />
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-all duration-500 z-20 bg-black/40 rounded-[2.5rem] backdrop-blur-sm">
+                                <FaCamera className="text-white text-3xl" />
                             </div>
                         </div>
                         <input id="profilePicInput" type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-                        <p className="text-xs font-bold text-fg-muted uppercase tracking-widest">Change Profile Picture</p>
+                        <div className="flex flex-col items-center">
+                            <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em] italic">Update Avatar</p>
+                            <div className="h-px w-8 bg-accent/20 mt-2"></div>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 relative z-10">
                         {/* Name */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1">Full Name</label>
+                        <div className="group/field">
+                            <label className="text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors font-mono">Full Name</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                className="w-full bg-white/[0.03] border border-white/5 px-6 py-4 rounded-2xl text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none font-bold italic font-mono"
                                 required
                                 placeholder="Username"
                             />
                         </div>
 
                         {/* Tech Stack */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1 flex items-center gap-2">
-                                <FaTools size={12} className="text-accent" /> Tech Stack (comma separated)
+                        <div className="group/field">
+                            <label className="italic uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors flex items-center gap-2 font-bold">
+                                <FaTools size={12} className="text-accent/40" /> Tech Stack
                             </label>
                             <input
                                 type="text"
                                 value={techStack}
                                 onChange={(e) => setTechStack(e.target.value)}
-                                className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                className="w-full bg-white/[0.03] border border-white/5 px-6 py-4 rounded-2xl text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none text-xs font-black uppercase tracking-widest font-mono"
                                 placeholder="React, Node.js, Tailwind..."
                             />
                         </div>
 
                         {/* LinkedIn */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1 flex items-center gap-2">
-                                <FaLinkedin size={12} className="text-accent" /> LinkedIn Profile
+                        <div className="group/field">
+                            <label className="italic uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors flex items-center gap-2 font-bold">
+                                <FaLinkedin size={12} className="text-accent/40" /> LinkedIn Profile
                             </label>
                             <input
                                 type="url"
                                 value={linkedinLink}
                                 onChange={(e) => setLinkedinLink(e.target.value)}
-                                className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                className="w-full bg-white/[0.03] border border-white/5 px-6 py-4 rounded-2xl text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none text-xs font-bold"
                                 placeholder="https://linkedin.com/in/..."
                             />
                         </div>
 
                         {/* GitHub */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1 flex items-center gap-2">
-                                <FaGithub size={12} className="text-accent" /> GitHub Link
+                        <div className="group/field">
+                            <label className="italic uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors flex items-center gap-2 font-bold">
+                                <FaGithub size={12} className="text-accent/40" /> GitHub Matrix
                             </label>
                             <input
                                 type="url"
                                 value={githubLink}
                                 onChange={(e) => setGithubLink(e.target.value)}
-                                className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                className="w-full bg-white/[0.03] border border-white/5 px-6 py-4 rounded-2xl text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none text-xs font-bold"
                                 placeholder="https://github.com/ak/..." />
                         </div>
 
                         {/* Portfolio */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1 flex items-center gap-2">
-                                <FaLink size={12} className="text-accent" /> Portfolio/Website
+                        <div className="group/field md:col-span-2">
+                            <label className="italic uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors flex items-center gap-2 font-bold">
+                                <FaLink size={12} className="text-accent/40" /> Portfolio Hub
                             </label>
                             <input
                                 type="url"
                                 value={portfolioLink}
                                 onChange={(e) => setPortfolioLink(e.target.value)}
-                                className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none"
+                                className="w-full bg-white/[0.03] border border-white/5 px-6 py-4 rounded-2xl text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none text-xs font-bold"
                                 placeholder="https://portfolio.com/..."
                             />
                         </div>
                     </div>
 
                     {/* Bio */}
-                    <div className="space-y-2">
-                        <label className="text-xs font-black text-fg-muted uppercase tracking-wider ml-1">Bio</label>
+                    <div className="group/field relative z-10">
+                        <label className="text-[10px] font-black text-fg-subtle uppercase tracking-[0.3em] mb-4 ml-1 block group-focus-within/field:text-accent transition-colors font-mono">Biography</label>
                         <textarea
-                            rows="4"
+                            rows="5"
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
-                            className="w-full bg-canvas-default/50 border border-border-default px-4 py-3 rounded-xl text-fg-default focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none resize-none"
-                            placeholder="Tell the community about yourself..."
+                            className="w-full bg-white/[0.03] border border-white/5 px-6 py-6 rounded-[1.5rem] text-fg-default focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all outline-none resize-none text-sm font-medium italic leading-relaxed"
+                            placeholder="Tell the collective about your vision..."
                         />
                     </div>
 
                     {/* Submit */}
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex flex-col md:flex-row gap-4 pt-8 relative z-10">
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="btn-secondary flex-1 border border-border-default px-4"
+                            className="flex-1 py-5 rounded-2xl bg-white/5 hover:bg-white/10 text-fg-subtle font-black text-[10px] uppercase tracking-[0.3em] border border-white/5 transition-all"
                         >
-                            Cancel
+                            Abort Changes
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary flex-1"
+                            className="flex-1 py-5 rounded-2xl bg-accent hover:bg-accent-hover text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-3xl shadow-accent/20 transition-all active:scale-95 disabled:grayscale group/save relative overflow-hidden"
                         >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/save:translate-x-full transition-transform duration-1000"></div>
                             {loading ? (
-                                <Loader size="sm" text="Updating..." button />
+                                <Loader size="sm" text="SYNCING..." button />
                             ) : (
-                                <><FaSave /> Save Changes</>
+                                <span className="flex items-center justify-center gap-3">
+                                    <FaSave size={14} /> Synchronize Profile
+                                </span>
                             )}
                         </button>
                     </div>
@@ -239,63 +257,54 @@ const EditProfile = () => {
 
             {/* Cropper Modal */}
             {showCropper && (
-                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-4">
-                    <div className="w-full max-w-2xl bg-canvas-subtle rounded-3xl overflow-y-auto max-h-[calc(100vh-40px)] scrollbar-thin shadow-2xl border border-border-default">
-                        <div className="p-5 md:p-6 border-b border-border-default flex justify-between items-center sticky top-0 bg-canvas-subtle z-10">
-                            <h3 className="text-xl font-black text-fg-default">Adjust Profile Picture</h3>
-                            <button onClick={() => setShowCropper(false)} className="p-2 hover:bg-canvas-default rounded-full text-fg-muted transition">
-                                <FaTimes />
+                <div className="fixed inset-0 z-[100] bg-canvas-default/95 backdrop-blur-2xl flex flex-col items-center justify-center p-4 md:p-10 animate-in fade-in duration-500">
+                    <div className="w-full max-w-2xl glass-card rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-3xl border border-white/5 flex flex-col max-h-[95vh] md:max-h-[90vh] animate-in zoom-in-95 duration-500">
+                        {/* Header - Sticky */}
+                        <div className="p-6 md:p-10 border-b border-white/[0.03] flex justify-between items-center bg-white/[0.02] shrink-0 sticky top-0 z-20 backdrop-blur-md">
+                            <div>
+                                <h3 className="text-xl font-black text-fg-default uppercase tracking-tight italic">Frame Calibration</h3>
+                                <p className="text-[10px] text-accent font-black uppercase tracking-widest mt-1 opacity-60">Optimize your presence</p>
+                            </div>
+                            <button onClick={() => setShowCropper(false)} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-fg-subtle hover:text-white transition-all">
+                                <FaTimes size={18} />
                             </button>
                         </div>
 
-                        <div className="relative h-[300px] md:h-[400px] w-full bg-black">
-                            <Cropper
-                                image={image}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onCropComplete={onCropComplete}
-                                onZoomChange={setZoom}
-                                cropShape="round"
-                                showGrid={false}
-                            />
-                        </div>
-
-                        <div className="p-6 md:p-8 space-y-6">
-                            <div className="space-y-4">
-                                <div className="flex justify-between text-xs font-black text-fg-muted uppercase tracking-widest">
-                                    <span>Zoom</span>
-                                    <span>{Math.round(zoom * 100)}%</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    value={zoom}
-                                    min={1}
-                                    max={3}
-                                    step={0.1}
-                                    onChange={(e) => setZoom(e.target.value)}
-                                    className="w-full h-2 bg-canvas-default rounded-lg appearance-none cursor-pointer accent-accent"
+                        {/* Content Area - Scrollable */}
+                        <div className="flex-1 overflow-y-auto relative bg-black min-h-[300px]">
+                            <div className="absolute inset-0">
+                                <Cropper
+                                    image={image}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    aspect={1}
+                                    onCropChange={setCrop}
+                                    onCropComplete={onCropComplete}
+                                    onZoomChange={setZoom}
+                                    cropShape="round"
+                                    showGrid={false}
                                 />
                             </div>
+                        </div>
 
-                            <div className="flex gap-4">
+                        {/* Footer - Sticky */}
+                        <div className="p-6 md:p-12 bg-canvas-subtle/80 backdrop-blur-xl shrink-0 border-t border-white/[0.03] sticky bottom-0 z-20">
+                            <div className="flex gap-3 md:gap-4">
                                 <button
                                     onClick={() => setShowCropper(false)}
-                                    className="btn-secondary flex-1 border border-border-default h-12 md:h-14"
+                                    className="flex-1 py-4 md:py-5 rounded-2xl bg-white/5 hover:bg-white/10 text-fg-subtle font-black text-[10px] uppercase tracking-[0.3em] border border-white/5 transition-all"
                                 >
-                                    Cancel
+                                    Abort
                                 </button>
                                 <button
                                     onClick={handleCropSave}
-                                    className="btn-primary flex-1 h-12 md:h-14"
+                                    className="flex-1 py-4 md:py-5 rounded-2xl bg-accent hover:bg-accent-hover text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-3xl shadow-accent/20 transition-all active:scale-95 flex items-center justify-center gap-2 md:gap-3"
                                 >
-                                    <FaCheck /> Apply Frame
+                                    <FaCheck /> Lock Frame
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <p className="mt-4 text-fg-muted text-sm font-medium hidden md:block">Drag to reposition your photo</p>
                 </div>
             )}
         </div>

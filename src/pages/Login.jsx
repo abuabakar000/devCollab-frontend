@@ -77,10 +77,10 @@ const Login = () => {
                     <img src={logoMobile} alt="DevCollab" className="h-14 w-auto" />
                 </div>
 
-                <div className="w-full max-w-md md:max-w-lg lg:max-w-xl my-auto p-8 md:p-12 animate-in fade-in slide-in-from-right-8 duration-700">
-                    <div className="mb-10 text-left">
-                        <h2 className="text-4xl font-black text-white tracking-tight mb-2">Login</h2>
-                        <p className="text-fg-muted font-medium">Welcome back to your workspace.</p>
+                <div className="w-full max-w-md md:max-w-lg lg:max-w-xl my-auto p-8 md:p-14 animate-in fade-in slide-in-from-right-8 duration-700">
+                    <div className="mb-12 text-left">
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter italic uppercase">Login</h2>
+                        <p className="text-fg-subtle font-medium italic opacity-60">Authorize your access to the collective.</p>
                     </div>
 
                     {error && (
@@ -133,9 +133,9 @@ const Login = () => {
                         </div>
                     </form>
 
-                    <div className="mt-12 pt-8 border-t border-border-muted text-center lg:text-left">
-                        <p className="text-fg-muted font-medium">
-                            Don't have an account? <Link to="/register" className="text-accent font-black hover:text-accent-hover transition-colors ml-1">Join the community</Link>
+                    <div className="mt-16 pt-10 border-t border-white/5 text-center lg:text-left">
+                        <p className="text-fg-subtle font-medium italic opacity-60">
+                            New to the matrix? <Link to="/register" className="text-accent font-black hover:text-accent-hover transition-colors ml-2 italic uppercase tracking-widest text-xs">Join Collective</Link>
                         </p>
                     </div>
                 </div>
