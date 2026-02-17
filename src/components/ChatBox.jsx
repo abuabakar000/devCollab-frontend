@@ -272,7 +272,7 @@ const ChatBox = () => {
                                 <button
                                     type="submit"
                                     disabled={!inputText.trim()}
-                                    className="btn-primary w-11 h-11 rounded-xl shadow-lg flex items-center justify-center transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+                                    className="btn-primary w-11 h-11 p-0 rounded-xl shadow-lg flex items-center justify-center transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
                                 >
                                     <IoSend size={18} />
                                 </button>
