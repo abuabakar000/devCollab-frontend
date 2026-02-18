@@ -34,7 +34,7 @@ https://dev-collab-frontend-alpha.vercel.app/
 
 | Mobile View |
 | :---: |
-| <img src="./screenshots/mobile_view.jpg" width="300" /> |
+| <img src="./screenshots/mobile_view.jpg" width="200" /> |
 
 ---
 
