@@ -1,16 +1,75 @@
-# React + Vite
+# devCollab - Frontend 💻
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![React](https://img.shields.io/badge/react-v19-blue)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/vite-v7-purple)](https://vitejs.dev/)
+[![Tailwind CSS 4](https://img.shields.io/badge/tailwind-v4-38b2ac)](https://tailwindcss.com/)
 
-Currently, two official plugins are available:
+A high-performance, responsive Single Page Application (SPA) designed for an immersive developer experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**🌐 Live Demo:** [https://dev-collab-frontend-alpha.vercel.app/](https://dev-collab-frontend-alpha.vercel.app/)
 
-## React Compiler
+## 📸 UI Preview
+| Dashboard | Mobile View |
+| :---: | :---: |
+| <img src="../screenshots/home.jpg" width="400" /> | <img src="../screenshots/mobile_view.jpg" width="200" /> |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 UI/UX Highlights
+- **Dark Mode First**: Sleek, modern aesthetic inspired by high-end dev tools.
+- **Smooth Interaction**: Powered by **Framer Motion** for layout transitions and hover effects.
+- **Responsive Layout**: Seamlessly shifts from mobile-friendly icons to full desktop dashboards.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Local Setup
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+2. **Environment Variables**
+   Create a `.env` file:
+   ```env
+   VITE_API_URL=http://localhost:5000
+   VITE_PUSHER_KEY=your_pusher_key
+   VITE_PUSHER_CLUSTER=your_pusher_cluster
+   ```
+3. **Launch Dev Server**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📂 Architecture & Folder Structure
+
+```text
+src/
+├── components/      # UI components (Layout, Feed, Modals)
+├── context/         # AuthContext, SocketContext (Global State)
+├── pages/           # High-level route components
+├── hooks/           # Custom React hooks (if any)
+└── assets/          # Static images and global CSS
+```
+
+### State Management
+- **AuthContext**: Manages user session, JWT persistence, and login status.
+- **SocketContext**: Handles the listener logic for Real-time events triggered by the backend.
+
+---
+
+## 🔧 Key Dependencies
+- **Axios**: Configured with interceptors for seamless API calls.
+- **React Icons**: A comprehensive set of developer-focused icons.
+- **Canvas Confetti**: For delightful "welcome" and "success" micro-interactions.
+
+## 🔮 Future Enhancements
+- **Skeleton Loading**: Improve perceived performance with content placeholders.
+- **Dark/Light Toggle**: Allow users to switch themes.
+- **Offline Support**: PWA capabilities for mobile use.
+
+---
+
+## 🌐 Deployment
+Optimized for deployment on **Vercel**. 
+1. `npm run build`
+2. Set `VITE_API_URL` to your production backend URL in Vercel settings.
