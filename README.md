@@ -5,12 +5,20 @@
 [![Tailwind CSS 4](https://img.shields.io/badge/tailwind-v4-38b2ac)](https://tailwindcss.com/)
 [![Vercel](https://img.shields.io/badge/deployed-Vercel-black)](https://dev-collab-frontend-alpha.vercel.app/)
 
-## 🚀 The Vision
-**devCollab** is a high-performance, responsive Single Page Application (SPA) built for a modern developer-centric social experience. It goes beyond simple social networking by providing a dedicated space where developers can share their progress, collaborate on ideas, and stay connected in real-time.
+## 🚀 Overview
 
-Whether you're showcasing a new side project, seeking feedback on a complex algorithm, or just looking to connect with like-minded creators, devCollab provides the tools and the aesthetic environment to make your work shine.
+**devCollab** is a modern, responsive Single Page Application built for a developer-centric social experience.
 
-**🌐 Live Demo:** [https://dev-collab-frontend-alpha.vercel.app/](https://dev-collab-frontend-alpha.vercel.app/)
+It provides a focused space where developers can:
+
+- Share progress and side projects  
+- Collaborate on ideas  
+- Communicate in real time  
+
+Designed with performance, clean UI, and smooth interaction in mind.
+
+**🌐 Live Demo:**  
+https://dev-collab-frontend-alpha.vercel.app/
 
 ---
 
@@ -26,17 +34,17 @@ Whether you're showcasing a new side project, seeking feedback on a complex algo
 
 | Mobile View |
 | :---: |
-| ![Mobile Experience](./screenshots/mobile_view.jpg) |
+| <img src="./screenshots/mobile_view.jpg" width="300" /> |
 
 ---
 
-## 🚀 Key Features
+## ✨ Key Features
 
-- **⚡ Real-time Interaction**: Instant messaging and notifications powered by **Socket.io** and **Pusher**.
-- **🎨 Modern Dark UI**: Sleek, high-contrast aesthetic using **Tailwind CSS 4** and **Framer Motion** for fluid animations.
-- **📱 True Responsive Design**: A "mobile-first" approach ensures a seamless experience across all devices.
-- **🔐 Secure Authentication**: Integrated with JWT-based sessions and custom `AuthContext` for global state management.
-- **✨ Onboarding Flow**: Dedicated welcoming and profile setup experience for new users.
+- ⚡ **Real-time messaging & notifications** via Socket.io and Pusher  
+- 🎨 **Modern dark UI** powered by Tailwind CSS 4 and Framer Motion  
+- 📱 **Fully responsive mobile-first layout**  
+- 🔐 **Secure JWT authentication** with global AuthContext  
+- 🚀 **Smooth onboarding and profile setup flow**
 
 ---
 
@@ -44,55 +52,53 @@ Whether you're showcasing a new side project, seeking feedback on a complex algo
 
 ```text
 src/
-├── components/      # Reusable UI (Navbar, PostCard, ChatBox)
-├── context/         # Auth & Socket state management
-├── pages/           # Route views (Home, Profile, PostDetail)
-├── services/        # API calls and external integrations
-├── utils/           # Helper functions and constants
-└── assets/          # Global styles and static files
+├── components/
+├── context/
+├── pages/
+├── services/
+├── utils/
+└── assets/
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
-- **React 19**: Modern functional components with hooks.
-- **Vite**: Ultra-fast build tool and dev server.
-- **Tailwind CSS 4**: Next-gen utility-first styling.
-- **Framer Motion**: Production-ready motion library.
-- **React Router**: Declarative routing for SPAs.
-- **Lucide React**: Clean and consistent iconography.
+**React 19 · Vite · Tailwind CSS 4 · Framer Motion · React Router · Lucide Icons**
 
 ---
 
 ## 💻 Local Setup
 
-1. **Clone & Install**
-   ```bash
-   npm install
-   ```
+### Install dependencies
+```bash
+npm install
+```
 
-2. **Environment Configuration**
-   Create a `.env` file in the root:
-   ```env
-   VITE_API_URL=http://localhost:5000
-   VITE_PUSHER_KEY=your_pusher_key
-   VITE_PUSHER_CLUSTER=your_pusher_cluster
-   ```
+### Create environment file
+```env
+VITE_API_URL=http://localhost:5000
+VITE_PUSHER_KEY=your_pusher_key
+VITE_PUSHER_CLUSTER=your_pusher_cluster
+```
 
-3. **Development Mode**
-   ```bash
-   npm run dev
-   ```
+### Start development server
+```bash
+npm run dev
+```
 
 ---
 
 ## 🌐 Deployment
 
-This project is optimized for **Vercel**. When deploying:
-1. Ensure your Production Environment Variables match your backend API URL.
-2. The `vercel.json` and `vite.config.js` are pre-configured for SPA routing.
+Optimized for **Vercel**.
+
+1. Run build:
+   ```bash
+   npm run build
+   ```
+2. Set `VITE_API_URL` to your production backend in Vercel environment variables.
 
 ---
 
-*Built with ❤️ for the Developer Community.*
+**Built for developers.**
