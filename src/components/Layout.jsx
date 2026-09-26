@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import ChatBox from "./ChatBox";
+import AICopilot from "./AICopilot";
 
 const Layout = ({ children }) => {
     const location = useLocation();
@@ -16,8 +17,13 @@ const Layout = ({ children }) => {
                 {children}
             </main>
 
-            {/* Hide ChatBox on auth and onboarding pages */}
-            {!isAuthPage && !isOnboarding && <ChatBox />}
+            {/* Hide ChatBox and AICopilot on auth and onboarding pages */}
+            {!isAuthPage && !isOnboarding && (
+                <>
+                    <ChatBox />
+                    <AICopilot />
+                </>
+            )}
         </div>
 
     );
